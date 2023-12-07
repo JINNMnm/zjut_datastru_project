@@ -76,10 +76,10 @@ void Node::SetBitMap(const string &bitMapString) {
 
 void Node::PrintPermission() const {
     BitMap thisBitMap = this->GetBitMap();
-    cout << "您当前的权限为：" << endl;
+    cout << "鎮ㄥ綋鍓嶇殑鏉冮檺涓猴細" << endl;
     this->GetBitMap().PrintBitMap();
     if(thisBitMap.IsRoot()){
-        cout << "您当前为超级管理员，拥有所有权限，请注意！！！" << endl;
+        cout << "鎮ㄥ綋鍓嶄负瓒呯骇绠＄悊鍛橈紝鎷ユ湁鎵�鏈夋潈闄愶紝璇锋敞鎰忥紒锛侊紒" << endl;
     }
 }
 

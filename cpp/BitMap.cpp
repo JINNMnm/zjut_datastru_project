@@ -20,7 +20,7 @@ BitMap::BitMap(int size, const std::string& bitMapString) {
     // first check the size and the length of the string
     if (size != bitMapString.length()) {
         std::cout << "The size and the length of the permission string are not equal!" << std::endl;
-        system("pause");
+        system("read");
         return;
     }
     this->size = size;
@@ -32,7 +32,7 @@ BitMap::BitMap(int size, const std::string& bitMapString) {
             this->bitMap[i] = true;
         }else{
             std::cout << "The string is not a bit map string!" << std::endl;
-            system("pause");
+            system("read");
             return;
         }
     }
@@ -51,7 +51,7 @@ void BitMap::SetBitMap(const std::string &bitMapString) {
     // first check the size and the length of the string
     if (this->size != bitMapString.length()) {
         std::cout << "The size and the length of the string are not equal!" << std::endl;
-        system("pause");
+        system("read");
         return;
     }
     for(int i = 0;i < this->size;i++){
@@ -61,7 +61,7 @@ void BitMap::SetBitMap(const std::string &bitMapString) {
             this->bitMap[i] = true;
         }else{
             std::cout << "The string is not a bit map string!" << std::endl;
-            system("pause");
+            system("read");
             return;
         }
     }
@@ -112,9 +112,9 @@ void BitMap::PrintBitMap() const {
     for(int i = 0;i < this->size;i++){
         cout << PERMISSION_STRING[i] << ":";
         if(this->bitMap[i]){
-            cout << "ÊÇ ";
+            cout << "æ˜¯ ";
         }else{
-            cout << "·ñ ";
+            cout << "å¦ ";
         }
     }
     cout << endl;

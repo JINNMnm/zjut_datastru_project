@@ -1,14 +1,2 @@
 # ninja log v5
-4	445	7196500022105511	CMakeFiles/code.dir/cpp/main.cpp.obj	bc723608236b760e
-125	1582	7196368257680868	CMakeFiles/code.dir/cpp/Node.cpp.obj	ffae1847c0d8f8f1
-514	727	7196500024867211	code.exe	8fed300b3e0ecbda
-22	660	7194288904792957	CMakeFiles/code.dir/cpp/BitMap.cpp.obj	4b2efe02a59d87ea
-17	513	7196500022744861	CMakeFiles/code.dir/cpp/Console.cpp.obj	e828d1b900ec433f
-11	485	7196500022481341	CMakeFiles/code.dir/cpp/AVLTree.cpp.obj	36c6ef8c4a4b4e8d
-3	436	7196500890287252	CMakeFiles/code.dir/cpp/AVLTree.cpp.obj	36c6ef8c4a4b4e8d
-436	616	7196500892059627	code.exe	8fed300b3e0ecbda
-17	475	7196522414858213	CMakeFiles/code.dir/cpp/Node.cpp.obj	ffae1847c0d8f8f1
-4	494	7196522415038037	CMakeFiles/code.dir/cpp/main.cpp.obj	bc723608236b760e
-11	557	7196522415648546	CMakeFiles/code.dir/cpp/AVLTree.cpp.obj	36c6ef8c4a4b4e8d
-22	582	7196522415902840	CMakeFiles/code.dir/cpp/Console.cpp.obj	e828d1b900ec433f
 582	824	7196522418280070	code.exe	8fed300b3e0ecbda

@@ -10,14 +10,14 @@ using namespace std;
 
 
 void Console::WelcomeUI() {
-    system("cls");
+    system("clear");
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           »¶Ó­½øÈëÓÃ»§µÇÂ½²éÑ¯ÏµÍ³                      |" << endl;
-    cout << "                            |           1.ÓÃ»§µÇÂ½                                 |" << endl;
-    cout << "                            |           2.×¢²áÓÃ»§                                 |" << endl;
-    cout << "                            |           3.¹Ø±ÕÏµÍ³                                 |" << endl;
+    cout << "                            |           æ¬¢è¿Žè¿›å…¥ç”¨æˆ·ç™»é™†æŸ¥è¯¢ç³»ç»Ÿ                      |" << endl;
+    cout << "                            |           1.ç”¨æˆ·ç™»é™†                                 |" << endl;
+    cout << "                            |           2.æ³¨å†Œç”¨æˆ·                                 |" << endl;
+    cout << "                            |           3.å…³é—­ç³»ç»Ÿ                                 |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                                           ÇëÑ¡Ôñ(1/2/3):" << endl;
+    cout << "                                           è¯·é€‰æ‹©(1/2/3):" << endl;
 }
 
 int Console::GetUIChoice() {
@@ -31,9 +31,9 @@ Node *Console::TryLogin(AVLTree &avlTree) {
     // return the node if success
     string userName;
     string password;
-    cout << "ÇëÊäÈëÓÃ»§Ãû:" << endl;
+    cout << "è¯·è¾“å…¥ç”¨æˆ·å:" << endl;
     cin >> userName;
-    cout << "ÇëÊäÈëÃÜÂë:" << endl;
+    cout << "è¯·è¾“å…¥å¯†ç :" << endl;
     cin >> password;
     Node* node = avlTree.FindNodeByUserName(userName);
 
@@ -49,7 +49,7 @@ Node *Console::TryLogin(AVLTree &avlTree) {
 }
 
 void Console::LoginFailUI() {
-    cout << "µÇÂ½Ê§°Ü,ÓÃ»§Ãû»òÃÜÂë´íÎó!" << endl;
+    cout << "ç™»é™†å¤±è´¥,ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯!" << endl;
 }
 
 Node *Console::Login(AVLTree &avlTree) {
@@ -58,7 +58,7 @@ Node *Console::Login(AVLTree &avlTree) {
     while(!node){
         tryTime++;
         if(tryTime == 3){
-            cout << "µÇÂ½Ê§°Ü´ÎÊý¹ý¶à,ÇëÉÔºóÔÙÊÔ!" << endl;
+            cout << "ç™»é™†å¤±è´¥æ¬¡æ•°è¿‡å¤š,è¯·ç¨åŽå†è¯•!" << endl;
             exit(1);
         }
         this->LoginFailUI();
@@ -69,68 +69,68 @@ Node *Console::Login(AVLTree &avlTree) {
 }
 
 void Console::UserUI(Node *node) {
-    system("cls");
+    system("clear");
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           »¶Ó­" << node->GetUserName() << "ÓÃ»§µÇÂ½²éÑ¯ÏµÍ³" << endl;
-    cout << "                            |           1.ÐÞ¸ÄÃÜÂë                                 |" << endl;
-    cout << "                            |           2.×¢Ïú                                    |" << endl;
-    cout << "                            |           3.ÍË³ö                                    |" << endl;
+    cout << "                            |           æ¬¢è¿Ž" << node->GetUserName() << "ç”¨æˆ·ç™»é™†æŸ¥è¯¢ç³»ç»Ÿ" << endl;
+    cout << "                            |           1.ä¿®æ”¹å¯†ç                                  |" << endl;
+    cout << "                            |           2.æ³¨é”€                                    |" << endl;
+    cout << "                            |           3.é€€å‡º                                    |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
     node->PrintPermission();
-    cout << "                                           ÇëÑ¡Ôñ(1/2):" << endl;
+    cout << "                                           è¯·é€‰æ‹©(1/2):" << endl;
 }
 
 void Console::AdminUI(Node *node) {
-    system("cls");
+    system("clear");
     cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           »¶Ó­" << node->GetUserName() << "¹ÜÀíÔ±µÇÂ½²éÑ¯ÏµÍ³" << endl;
-    cout << "                            |           1.ÐÞ¸ÄÃÜÂë                                 |" << endl;
-    cout << "                            |           2.ÐÞ¸ÄÈ¨ÏÞ                                 |" << endl;
-    cout << "                            |           3.×¢ÏúÓÃ»§                                 |" << endl;
-    cout << "                            |           4.ÐÂÔöÓÃ»§                                 |" << endl;
-    cout << "                            |           5.ÍË³ö                                     |" << endl;
+    cout << "                            |           æ¬¢è¿Ž" << node->GetUserName() << "ç®¡ç†å‘˜ç™»é™†æŸ¥è¯¢ç³»ç»Ÿ" << endl;
+    cout << "                            |           1.ä¿®æ”¹å¯†ç                                  |" << endl;
+    cout << "                            |           2.ä¿®æ”¹æƒé™                                 |" << endl;
+    cout << "                            |           3.æ³¨é”€ç”¨æˆ·                                 |" << endl;
+    cout << "                            |           4.æ–°å¢žç”¨æˆ·                                 |" << endl;
+    cout << "                            |           5.é€€å‡º                                     |" << endl;
     cout << "                            ------------------------------------------------------" << endl;
     node->PrintPermission();
-    cout << "                                           ÇëÑ¡Ôñ(1/2/3/4/5):" << endl;
+    cout << "                                           è¯·é€‰æ‹©(1/2/3/4/5):" << endl;
 }
 
 void Console::DeleteUser(AVLTree &avlTree, Node *thisNode) {
     char choice;
     if(thisNode->GetIsAdmin()){
-        cout << "ÊÇ·ñÒª×¢Ïú±¾ÕË»§(y/n)" << endl;
+        cout << "æ˜¯å¦è¦æ³¨é”€æœ¬è´¦æˆ·(y/n)" << endl;
         cin >> choice;
         if(choice == 'y'){
            if(thisNode->GetBitMap().IsRoot()){
-                cout << "ÄúÊÇ¸ùÓÃ»§£¬ÎÞ·¨×¢Ïú" << endl;
+                cout << "æ‚¨æ˜¯æ ¹ç”¨æˆ·ï¼Œæ— æ³•æ³¨é”€" << endl;
                system("pause");
                 return ;
            }
            avlTree.Delete(thisNode->GetUserName(), thisNode, avlTree.GetRoot());
-            cout << "×¢Ïú³É¹¦" << endl;
+            cout << "æ³¨é”€æˆåŠŸ" << endl;
             avlTree.WriteTreeToFile(fileName);
             system("pause");
            nextPage = 1;
         }else if(choice == 'n'){
-            cout << "ÇëÊäÈëÒª×¢ÏúµÄÓÃ»§Ãû" << endl;
+            cout << "è¯·è¾“å…¥è¦æ³¨é”€çš„ç”¨æˆ·å" << endl;
             string userName;
             cin >> userName;
             avlTree.Delete(userName, thisNode, avlTree.GetRoot());
             avlTree.WriteTreeToFile(fileName);
         }else{
-            cout << "ÊäÈë´íÎó" << endl;
+            cout << "è¾“å…¥é”™è¯¯" << endl;
             system("pause");
         }
     }else{
-        cout << "Äú²»ÊÇ¹ÜÀíÔ±£¬Ö»ÄÜ×¢Ïú±¾ÕË»§£¬ÊÇ·ñ×¢Ïú£¿(y/n)" << endl;
+        cout << "æ‚¨ä¸æ˜¯ç®¡ç†å‘˜ï¼Œåªèƒ½æ³¨é”€æœ¬è´¦æˆ·ï¼Œæ˜¯å¦æ³¨é”€ï¼Ÿ(y/n)" << endl;
         cin >> choice;
         if(choice == 'y'){
             avlTree.Delete(thisNode->GetUserName(), thisNode, avlTree.GetRoot());
-            cout << "×¢Ïú³É¹¦" << endl;
+            cout << "æ³¨é”€æˆåŠŸ" << endl;
             avlTree.WriteTreeToFile(fileName);
             system("pause");
             nextPage = 1;
         }else if(choice == 'n'){
-            cout << "Äú²»ÊÇ¹ÜÀíÔ±£¬ÎÞ·¨×¢ÏúÆäËûÓÃ»§" << endl;
+            cout << "æ‚¨ä¸æ˜¯ç®¡ç†å‘˜ï¼Œæ— æ³•æ³¨é”€å…¶ä»–ç”¨æˆ·" << endl;
             system("pause");
         }
     }
@@ -139,7 +139,7 @@ void Console::DeleteUser(AVLTree &avlTree, Node *thisNode) {
 void Console::Register(AVLTree &avlTree, Node *currentUser) {
     if(currentUser->GetIsAdmin()){
         bool isAdmin;
-        cout << "ÊÇ·ñ×¢²á¹ÜÀíÔ±(y/n)" << endl;
+        cout << "æ˜¯å¦æ³¨å†Œç®¡ç†å‘˜(y/n)" << endl;
         string choice;
         cin >> choice;
         if(choice == "y"){
@@ -147,7 +147,7 @@ void Console::Register(AVLTree &avlTree, Node *currentUser) {
         }else if(choice == "n"){
             isAdmin = false;
         }else{
-            cout << "ÊäÈë´íÎó" << endl;
+            cout << "è¾“å…¥é”™è¯¯" << endl;
             system("pause");
             return;
         }
@@ -165,22 +165,22 @@ void Console::Register(AVLTree &avlTree, Node *currentUser) {
 void Console::RegisterUser(AVLTree &avlTree, Node *currentUser) {
     // get the userName and check the password
     string userName, password, passwordCheck;
-    cout << "ÇëÊäÈëÓÃ»§Ãû:" << endl;
+    cout << "è¯·è¾“å…¥ç”¨æˆ·å:" << endl;
     cin >> userName;
-    cout << "ÇëÊäÈëÃÜÂë:" << endl;
+    cout << "è¯·è¾“å…¥å¯†ç :" << endl;
     cin >> password;
     // check if the userName exist
     Node* node = avlTree.FindNodeByUserName(userName);
     if(node){
-        cout << "ÓÃ»§ÃûÒÑ´æÔÚ!" << endl;
+        cout << "ç”¨æˆ·åå·²å­˜åœ¨!" << endl;
         system("pause");
         return;
     }
     // double-check the password
-    cout << "ÇëÔÙ´ÎÊäÈëÃÜÂë:" << endl;
+    cout << "è¯·å†æ¬¡è¾“å…¥å¯†ç :" << endl;
     cin >> passwordCheck;
     if(password != passwordCheck){
-        cout << "Á½´ÎÊäÈëµÄÃÜÂë²»Ò»ÖÂ!" << endl;
+        cout << "ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´!" << endl;
         system("pause");
         return;
     }
@@ -191,32 +191,32 @@ void Console::RegisterUser(AVLTree &avlTree, Node *currentUser) {
 void Console::RegisterAdmin(AVLTree &avlTree, Node *currentUser) {
     // get the userName and check the password
     string userName, password, passwordCheck;
-    cout << "ÇëÊäÈëÓÃ»§Ãû:" << endl;
+    cout << "è¯·è¾“å…¥ç”¨æˆ·å:" << endl;
     cin >> userName;
-    cout << "ÇëÊäÈëÃÜÂë:" << endl;
+    cout << "è¯·è¾“å…¥å¯†ç :" << endl;
     cin >> password;
     // check if the userName exist
     Node* node = avlTree.FindNodeByUserName(userName);
     if(node){
-        cout << "ÓÃ»§ÃûÒÑ´æÔÚ!" << endl;
+        cout << "ç”¨æˆ·åå·²å­˜åœ¨!" << endl;
         system("pause");
         return;
     }
     // double-check the password
-    cout << "ÇëÔÙ´ÎÊäÈëÃÜÂë:";
+    cout << "è¯·å†æ¬¡è¾“å…¥å¯†ç :";
     cin >> passwordCheck;
     if(password != passwordCheck){
-        cout << "Á½´ÎÊäÈëµÄÃÜÂë²»Ò»ÖÂ!";
+        cout << "ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´!";
         system("pause");
         return;
     }
     // ask if you need to set the permission
-    cout << "ÊÇ·ñÐèÒªÉèÖÃÈ¨ÏÞ£¬²»ÉèÖÃÔò½«Ê¹ÓÃ¹ÜÀíÔ±Ä¬ÈÏÈ¨ÏÞ£¿(y/n)" ;
+    cout << "æ˜¯å¦éœ€è¦è®¾ç½®æƒé™ï¼Œä¸è®¾ç½®åˆ™å°†ä½¿ç”¨ç®¡ç†å‘˜é»˜è®¤æƒé™ï¼Ÿ(y/n)" ;
     string choice;
     cin >> choice;
     string bitMapString;
     if(choice == "y"){
-        cout << "ÇëÊäÈë6±ÈÌØÈ¨ÏÞ×Ö·û´®:" << endl;
+        cout << "è¯·è¾“å…¥6æ¯”ç‰¹æƒé™å­—ç¬¦ä¸²:" << endl;
         PermisstionBitMapExplainedUI();
         cin >> bitMapString;
     }else{
@@ -224,13 +224,13 @@ void Console::RegisterAdmin(AVLTree &avlTree, Node *currentUser) {
     }
     // register the user
     if(avlTree.Insert(userName, password, true, currentUser, bitMapString)){
-        cout << "×¢²á³É¹¦!" << endl;
+        cout << "æ³¨å†ŒæˆåŠŸ!" << endl;
         system("pause");
     }
 }
 
 void Console::CleanWindow() {
-    system("cls");
+    system("clear");
 }
 
 void Console::Run() {
@@ -318,20 +318,20 @@ void Console::PageTwo() {
 void Console::ChangePassword(AVLTree &avlTree, Node *currentUser) {
     // get the password and check the password
     string password, passwordCheck;
-    cout << "ÇëÊäÈëÔ­ÃÜÂë:" << endl;
+    cout << "è¯·è¾“å…¥åŽŸå¯†ç :" << endl;
     cin >> password;
     if(password != currentUser->GetPassword()){
-        cout << "ÃÜÂë´íÎó!" << endl;
+        cout << "å¯†ç é”™è¯¯!" << endl;
         system("pause");
         return;
     }
     // double-check the password
-    cout << "ÇëÊäÈëÐÂÃÜÂë:" << endl;
+    cout << "è¯·è¾“å…¥æ–°å¯†ç :" << endl;
     cin >> password;
-    cout << "ÇëÔÙ´ÎÊäÈëÐÂÃÜÂë:" << endl;
+    cout << "è¯·å†æ¬¡è¾“å…¥æ–°å¯†ç :" << endl;
     cin >> passwordCheck;
     if(password != passwordCheck){
-        cout << "Á½´ÎÊäÈëµÄÃÜÂë²»Ò»ÖÂ!" << endl;
+        cout << "ä¸¤æ¬¡è¾“å…¥çš„å¯†ç ä¸ä¸€è‡´!" << endl;
         system("pause");
         return;
     }
@@ -346,24 +346,24 @@ void Console::ChangePassword(AVLTree &avlTree, Node *currentUser) {
 }
 
 void Console::ChangePasswordSuccessfullyUI() {
-    cout << "ÃÜÂëÐÞ¸Ä³É¹¦!" << endl;
+    cout << "å¯†ç ä¿®æ”¹æˆåŠŸ!" << endl;
 }
 
 void Console::ChangePermission(AVLTree &avlTree, Node *currentUser) {
     // first check if the user is admin
     if(!currentUser->GetIsAdmin()){
-        cout << "Äú²»ÊÇ¹ÜÀíÔ±£¬ÎÞ·¨ÐÞ¸ÄÈ¨ÏÞ!" << endl;
+        cout << "æ‚¨ä¸æ˜¯ç®¡ç†å‘˜ï¼Œæ— æ³•ä¿®æ”¹æƒé™!" << endl;
         system("pause");
         return;
     }
     // get the userName
     string userName;
-    cout << "ÇëÊäÈëÒªÐÞ¸ÄÈ¨ÏÞµÄÓÃ»§Ãû:" << endl;
+    cout << "è¯·è¾“å…¥è¦ä¿®æ”¹æƒé™çš„ç”¨æˆ·å:" << endl;
     cin >> userName;
     // check if the user exist
     Node* targetedUser = avlTree.FindNodeByUserName(userName);
     if(!targetedUser){
-        cout << "¸ÃÓÃ»§²»´æÔÚ!" << endl;
+        cout << "è¯¥ç”¨æˆ·ä¸å­˜åœ¨!" << endl;
         system("pause");
         return;
     }
@@ -376,31 +376,31 @@ void Console::ChangePermission(AVLTree &avlTree, Node *currentUser) {
 }
 
 void Console::CannotChangePermissionUI() {
-    cout << "ÐÞ¸ÄÈ¨ÏÞÊ§°Ü!" << endl;
+    cout << "ä¿®æ”¹æƒé™å¤±è´¥!" << endl;
 }
 
 void Console::PermisstionBitMapExplainedUI() {
     // explain the permission bit map
-    cout << "È¨ÏÞÎ»Í¼ËµÃ÷(1±íÊ¾ÓÐ¡¢0±íÊ¾ÎÞ):" << endl;
-    cout << "µÚÒ»Î»:ÐÂÔöÓÃ»§È¨ÏÞ;" << endl;
-    cout << "µÚ¶þÎ»:ÐÂÔö¹ÜÀíÔ±È¨ÏÞ;" << endl;
-    cout << "µÚÈýÎ»:É¾³ýÓÃ»§È¨ÏÞ;" << endl;
-    cout << "µÚËÄÎ»:É¾³ý¹ÜÀíÔ±È¨ÏÞ;" << endl;
-    cout << "µÚÎåÎ»:ÐÞ¸ÄÓÃ»§È¨ÏÞ;" << endl;
-    cout << "µÚÁùÎ»:ÐÞ¸Ä¹ÜÀíÔ±È¨ÏÞ;" << endl;
+    cout << "æƒé™ä½å›¾è¯´æ˜Ž(1è¡¨ç¤ºæœ‰ã€0è¡¨ç¤ºæ— ):" << endl;
+    cout << "ç¬¬ä¸€ä½:æ–°å¢žç”¨æˆ·æƒé™;" << endl;
+    cout << "ç¬¬äºŒä½:æ–°å¢žç®¡ç†å‘˜æƒé™;" << endl;
+    cout << "ç¬¬ä¸‰ä½:åˆ é™¤ç”¨æˆ·æƒé™;" << endl;
+    cout << "ç¬¬å››ä½:åˆ é™¤ç®¡ç†å‘˜æƒé™;" << endl;
+    cout << "ç¬¬äº”ä½:ä¿®æ”¹ç”¨æˆ·æƒé™;" << endl;
+    cout << "ç¬¬å…­ä½:ä¿®æ”¹ç®¡ç†å‘˜æƒé™;" << endl;
 }
 
 std::string Console::GetPermissionInput() {
     Console::PermisstionBitMapExplainedUI();
     string bitMapString;
-    cout << "ÇëÊäÈë6±ÈÌØÈ¨ÏÞ01×Ö·û´®:" << endl;
+    cout << "è¯·è¾“å…¥6æ¯”ç‰¹æƒé™01å­—ç¬¦ä¸²:" << endl;
     cin >> bitMapString;
     if(bitMapString.length() != 6){
-        cout << "ÊäÈëµÄ×Ö·û´®³¤¶È²»Îª6!" << endl;
+        cout << "è¾“å…¥çš„å­—ç¬¦ä¸²é•¿åº¦ä¸ä¸º6!" << endl;
         system("pause");
         return "";
     }else if(bitMapString.find_first_not_of("01") != string::npos){
-        cout << "ÊäÈëµÄ×Ö·û´®²»ÊÇ01×Ö·û´®!" << endl;
+        cout << "è¾“å…¥çš„å­—ç¬¦ä¸²ä¸æ˜¯01å­—ç¬¦ä¸²!" << endl;
         system("pause");
         return "";
     }

@@ -19,9 +19,9 @@ const int CHANGE_ADMIN_INDEX = 5;
 const std::string USER_PERMISSION_DEFAULT = "100000";
 const std::string ADMIN_PERMISSION_DEFAULT = "111010";
 
-const std::string PERMISSION_STRING[PERMISSION_NUM] = {"�����û�Ȩ��","��������ԱȨ��",
-                                                  "ɾ�������û�Ȩ��","ɾ����������ԱȨ��",
-                                                  "�޸������û�Ȩ��","�޸���������ԱȨ��"};
+const std::string PERMISSION_STRING[PERMISSION_NUM] = {"新增用户权限","新增管理员权限",
+                                                  "删除其他用户权限","删除其他管理员权限",
+                                                  "修改其他用户权限","修改其他管理员权限"};
 
 const std::string USER_FILE_PATH = "../txt/user.txt";
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="GBK">
+    <file url="file://$PROJECT_DIR$/cpp/BitMap.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/cpp/Console.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/cpp/Node.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/cpp/main.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/h/BitMap.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/h/const.h" charset="GBK" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>

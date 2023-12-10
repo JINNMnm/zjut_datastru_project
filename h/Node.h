@@ -1,58 +1,55 @@
 #ifndef NODE_H
 #define NODE_H
+#include <ostream>
 #include <string>
-# include "BitMap.h"
-# include "AVLTree.h"
+#include "AVLTree.h"
 using namespace std;
 
 
 // Node class
 class Node {
 public:
-    // constructor
-    Node(string userName, string password, int height, bool isAdmin, string bitMapString);
-    // getter and setter
-    const string &GetUserName() const;
-    void SetUserName(const string &userName);
+  // Constructor
+  Node();
+  Node(string ID);
 
-    const string &GetPassword() const;
-    void SetPassword(const string &password);
+  // Destructor
+  virtual ~Node() = 0;
 
-    Node *GetLeft() const;
-    void SetLeft(Node *left);
+  // getter and setter
+  string getID();
+  void setID(string ID);
 
-    Node *GetRight() const;
-    void SetRight(Node *right);
+  int getHeight();
+  void setHeight(int height);
+  void updateHeight();
 
-    int GetHeight() const;
-    void SetHeight(int height);
+  // over write operator: > < = ==
+  virtual bool operator>(Node &node);
+  virtual bool operator<(Node &node);
+  virtual bool operator==(Node &node);
+  virtual Node &operator=(Node &node);
 
-    bool GetIsAdmin() const;
-    void SetIsAdmin(bool isAdmin);
 
-    const BitMap & GetBitMap() const;
-    void SetBitMap(const string& bitMapString);
+  // virtual function that need to be implemented in derived class
+  virtual void print(ofstream& os) = 0;
+  virtual void print() = 0;
+  virtual string getPassword(){return "";};
+  virtual bool getAdmin(){return false;};
+  virtual string getBelongUserID(){return "";};
+  virtual void setBelongUserID(string ID){};
+  virtual string getName(){return "";};
 
-    // print the permission of the user
-    void PrintPermission() const;
+  // left child
+  Node *left;
+  // right child
+  Node *right;
 
-    // overload the operator =
-    Node& operator=(const Node& node);
-
-    // destructor
-    ~Node() = default;
-private:
-    string userName; // username
-    string password; // password
-    Node* left;
-    Node* right; // left and right child
-    bool isAdmin; // whether the user tree is admin tree
-    int height; // height of the node in the tree
-    BitMap bitMap; // bit map
-
-    // getptr
-    friend Node*& AVLTree::GetLeftPtr(Node*& node);
-    friend Node*& AVLTree::GetRightPtr(Node*& node);
+protected:
+  // ID
+  string ID;
+  // height
+  int height;
 };
 
 #endif // NODE_H

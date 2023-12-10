@@ -1,401 +1,476 @@
 //
 // Created by 31320 on 2023/9/30.
 //
-#include <iostream>
-#include <fstream>
-#include <string>
 #include "../h/AVLTree.h"
-#include "../h/BitMap.h"
-#include "../h/const.h"
+#include "../h/Book.h"
 #include "../h/Node.h"
+#include "../h/User.h"
+#include "../h/const.h"
+#include <cstddef>
+#include <fstream>
+#include <iostream>
+#include <string>
 using namespace std;
 
-AVLTree::AVLTree() {
-    root = nullptr;
+// Constructor
+AVLTree::AVLTree() { this->root = nullptr; }
+
+// Destructor
+AVLTree::~AVLTree() { destroy(this->root); }
+
+void AVLTree::destroy(Node *root) {
+  if (root == nullptr) {
+    return;
+  }
+  destroy(root->left);
+  destroy(root->right);
+  delete root;
 }
 
-void AVLTree::DestroyTree(Node *T) {
-    if(T == nullptr) return;
-    DestroyTree(T->GetLeft());
-    DestroyTree(T->GetRight());
-    delete T;
+// getter and setter
+Node *AVLTree::getRoot() { return this->root; }
+void AVLTree::setRoot(Node *root) { this->root = root; }
+
+// insert a node
+// prerequisite: LL, RR, LR, RL
+// LL
+Node *AVLTree::LL(Node *root) {
+  Node *temp = root->left;
+  root->left = temp->right;
+  temp->right = root;
+  root->updateHeight();
+  temp->updateHeight();
+
+  return temp;
 }
 
-bool AVLTree::Insert(const string &userName, const string &password,bool isAdminCheck,const Node* thisNode) {
-    string newNodeBitMap;
-
-    // the third parameter stand for the user to insert is admin or not
-    if(isAdminCheck){
-        // insert the admin
-        if(!thisNode->GetBitMap().GetBitAt(INSERT_ADMIN_INDEX)){
-            cout << "You don't have the permission to insert admin." << endl;
-            system("pause");
-            return false;
-        }
-        newNodeBitMap = ADMIN_PERMISSION_DEFAULT;
-    }else{
-        // insert the user
-        if(!thisNode->GetBitMap().GetBitAt(INSERT_USER_INDEX)){
-            cout << "You don't have the permission to insert user." << endl;
-            system("pause");
-            return false;
-        }
-        newNodeBitMap = USER_PERMISSION_DEFAULT;
-    }
-
-    Node* node = new Node(userName, password, 1, isAdminCheck, newNodeBitMap);
-
-    return addNode(this->root, node);
+// RR
+Node *AVLTree::RR(Node *root) {
+  Node *temp = root->right;
+  root->right = temp->left;
+  temp->left = root;
+  root->updateHeight();
+  temp->updateHeight();
+  return temp;
 }
 
-bool AVLTree::Insert(const string &userName, const string &password, bool isAdminCheck,const Node* thisNode,
-                     const string &bitMapOtherString) {
-    // this function is used to explicitly insert a admin with its permission
-    if(!isAdminCheck){
-        cout << "the permission of users is set by default you cant explicitly set it." << endl;
-        system("pause");
-        return false;
-    }
-
-    // check whether the user has the permission to insert admin
-    if(!thisNode->GetBitMap().GetBitAt(INSERT_ADMIN_INDEX)){
-        cout << "You don't have the permission to insert admin." << endl;
-        system("pause");
-        return false;
-    }
-
-    // check whether the bitMapOther have more permission than the user
-    BitMap bitMapOther(PERMISSION_NUM, bitMapOtherString);
-    if(!thisNode->GetBitMap().CanInsertOrChange(bitMapOther)){
-        cout << "You don't have the permission to set the permission of the admin." << endl;
-        system("pause");
-        return false;
-    }
-
-    // check if the new admin is root
-    if(bitMapOther.IsRoot()){
-        cout << "You can't add another root." << endl;
-        system("pause");
-        return false;
-    }
-
-    Node* node = new Node(userName, password, 1, isAdminCheck, bitMapOtherString);
-
-    return addNode(this->root, node);
+// LR
+Node *AVLTree::LR(Node *root) {
+  root->left = RR(root->left);
+  return LL(root);
 }
 
-bool AVLTree::addNode(Node *&T, Node *node) {
+// RL
+Node *AVLTree::RL(Node *root) {
+  root->right = LL(root->right);
+  return RR(root);
+}
 
-    // if the tree is empty
-    if(this->root == nullptr){
-        this->root = node;
-        return false;
+// after all the prerequisite, we can implement the add function
+bool AVLTree::add(Node *newNode, Node *&root) {
+  if (root == nullptr) {
+    // not sure if node point to a Book or a User
+    // so we need to dynamic_cast
+    if (dynamic_cast<User *>(newNode)) {
+      root = new User(*(dynamic_cast<User *>(newNode)));
+    } else if (dynamic_cast<Book *>(newNode)) {
+      root = new Book(*(dynamic_cast<Book *>(newNode)));
     }
-
-    // if the tree is not empty
-    if(T->GetUserName() > node->GetUserName()){
-        if(T->GetLeft() == nullptr){
-            T->SetLeft(node);
-        }else{
-            Node *&temp = GetLeftPtr(T);
-            if (!addNode(temp, node)){
-                return false;
-            }
-        }
-    } else if(T->GetUserName() < node->GetUserName()) {
-        if (T->GetRight() == nullptr) {
-            T->SetRight(node);
-        } else {
-            Node *&temp = GetRightPtr(T);
-            if (!addNode(temp, node)) {
-                return false;
-            }
-        }
-    }else{
-        cout << "The user name has been used." << endl;
-        system("pause");
-        return false;
-    }
-
-    // update the height of the node
-    T->SetHeight(this->GetHeight(T));
-
-    // check whether the tree is balanced
-    if (abs(GetHeight(T->GetLeft()) - GetHeight(T->GetRight())) > 1) {
-        if(GetHeight(T->GetLeft()) - GetHeight(T->GetRight()) > 0){
-            if(GetHeight(T->GetLeft()->GetLeft()) - GetHeight(T->GetLeft()->GetRight()) > 0){
-                T = this->LL(T);
-            }else{
-                T = this->LR(T);
-            }
-        }else{
-            if(GetHeight(T->GetRight()->GetLeft()) - GetHeight(T->GetRight()->GetRight()) > 0){
-                T = this->RL(T);
-            }else{
-                T = this->RR(T);
-            }
-        }
-    }
-
     return true;
-}
-
-Node* AVLTree::LL(Node *node) {
-    Node* temp = node->GetLeft();
-    node->SetLeft(temp->GetRight());
-    temp->SetRight(node);
-    return temp;
-}
-
-Node* AVLTree::RR(Node *node) {
-    Node* temp = node->GetRight();
-    node->SetRight(temp->GetLeft());
-    temp->SetLeft(node);
-    return temp;
-}
-
-Node* AVLTree::LR(Node *node) {
-    Node* temp = node->GetLeft()->GetRight();
-    Node* tempLeft = temp->GetLeft();
-    Node* tempRight = temp->GetRight();
-    temp->SetLeft(node->GetLeft());
-    temp->SetRight(node);
-    node->GetLeft()->SetRight(tempLeft);
-    node->SetLeft(tempRight);
-    return temp;
-}
-
-Node* AVLTree::RL(Node *node) {
-    Node* temp = node->GetRight()->GetLeft();
-    Node* tempLeft = temp->GetLeft();
-    Node* tempRight = temp->GetRight();
-    temp->SetRight(node->GetRight());
-    temp->SetLeft(node);
-    node->GetRight()->SetLeft(tempRight);
-    node->SetRight(tempLeft);
-    return temp;
-}
-
-void AVLTree::PrintTree(Node *node) {
-    if(node == nullptr) return;
-    PrintTree(node->GetLeft());
-    cout << node->GetUserName() << " " << node->GetPassword() << endl;
-    PrintTree(node->GetRight());
-}
-
-void AVLTree::ReadTreeFromFile(const string &fileName) {
-    ifstream fin(fileName);
-    if(!fin){
-        cout << "Can't open the file." << endl;
-        return;
+  }
+  if (*newNode < *root) {
+    if (!add(newNode, root->left)) {
+      return false;
     }
-    string userName, password, bitMapString;
-    int isAdminInt;
-    while(fin >> userName >> password >> isAdminInt >> bitMapString){
-        this->InsertFromFile(userName, password, isAdminInt == 1, bitMapString);
-    }
-    fin.close();
-}
-
-Node *AVLTree::GetRoot() const {
-    return this->root;
-}
-
-int AVLTree::GetHeight(Node *node) {
-    if(node == nullptr) return 0;
-        return max(GetHeight(node->GetLeft()), GetHeight(node->GetRight())) + 1;
-}
-
-void AVLTree::WriteTreeToFile(const string &fileName) {
-    ofstream fout(fileName);
-    if(!fout){
-        cout << "Can't open the file." << endl;
-        return;
-    }
-    printTreeToFile(this->root, fout);
-    fout.close();
-}
-
-void AVLTree::printTreeToFile(Node *node, ofstream &file) {
-    if(node == nullptr) return;
-    printTreeToFile(node->GetLeft(), file);
-    file << node->GetUserName() << " " << node->GetPassword() << " " << (node->GetIsAdmin() ? 1 : 0) << ' ' << node->GetBitMap() << endl;
-    printTreeToFile(node->GetRight(), file);
-}
-
-Node *AVLTree::FindNodeByUserName(const string &userName) {
-    Node* node = this->root;
-    while(node != nullptr){
-        if(node->GetUserName() == userName){
-            return node;
-        }else if(node->GetUserName() > userName){
-            node = node->GetLeft();
-        }else{
-            node = node->GetRight();
-        }
-    }
-    Node* temp= nullptr;
-    return temp;
-}
-
-void AVLTree::InsertFromFile(const string &userName, const string &password, bool isAdminCheck,
-                             const string &bitMapOtherString) {
-    // Insert while reading from file
-    Node *node = new Node(userName, password, 1, isAdminCheck, bitMapOtherString);
-    addNode(this->root, node);
-}
-
-void AVLTree::ChangePermission(Node *targetNode, const Node *thisNode, const string &bitMapOtherString) {
-    if(targetNode->GetIsAdmin()){
-        // current user want to change a admin user's permission
-        // check if the current user can change the permission of targeted user
-        if(!thisNode->GetBitMap().GetBitAt(CHANGE_ADMIN_INDEX)){
-            cout << "You don't have the permission to change the permission of the admin." << endl;
-            system("pause");
-            return;
-        }
-        // check if the targeted user's permission is more than the current user
-        BitMap bitMapOther(PERMISSION_NUM, bitMapOtherString);
-        if(bitMapOther.IsEmpty()){
-            return;
-        }
-        if(!thisNode->GetBitMap().CanInsertOrChange(bitMapOther)){
-            cout << "The permission of the admin is more than yours." << endl;
-            cout << "Your permission is:" << endl;
-            thisNode->PrintPermission();
-            cout << "The permission of the admin is:" << endl;
-            targetNode->PrintPermission();
-            system("pause");
-            return;
-        }
-        // check if the targeted user is root
-        if(bitMapOther.IsRoot()){
-            cout << "You can't change the permission of another root." << endl;
-            system("pause");
-            return;
-        }
-        // change the permission
-        targetNode->SetBitMap(bitMapOtherString);
-        cout << "The permission of the admin has been changed." << endl;
-        system("pause");
-    }else{
-        // current user want to change a normal user's permission,which is fixed
-        cout << "You can't change the permission of a normal user!" << endl;
-        system("pause");
-        return;
-    }
-}
-
-Node* AVLTree::Delete(const string &userName, Node *thisNode, Node* targetedNode) {
-    // find the node to delete
-    if(targetedNode == nullptr){
-        cout << "The user doesn't exist." << endl;
-        system("pause");
-        return targetedNode;
-    }
-    if (targetedNode->GetUserName() == userName) {
-        // the user to delete is found
-        if (targetedNode == thisNode) {
-            // the user want to delete himself
-            targetedNode = DeleteNode(targetedNode);
-            return targetedNode;
-        }
-        if (targetedNode->GetIsAdmin()) {
-            // the user want to delete a admin
-            // check if the user has the permission to delete a admin
-            if (!thisNode->GetBitMap().GetBitAt(DELETE_ADMIN_INDEX)) {
-                cout << "You don't have the permission to delete a admin." << endl;
-                system("pause");
-                return targetedNode;
-            }
-            // check if the target user's permission is more than the current user
-            if (!thisNode->GetBitMap().CanInsertOrChange(targetedNode->GetBitMap())) {
-                cout << "The permission of the admin is more than yours." << endl;
-                cout << "Your permission is:" << endl;
-                thisNode->PrintPermission();
-                cout << "The permission of the admin is:" << endl;
-                targetedNode->PrintPermission();
-                system("pause");
-                return targetedNode;
-            }
-            // delete the admin
-            targetedNode = DeleteNode(targetedNode);
-            cout << "The admin has been deleted." << endl;
-            system("pause");
-        } else {
-            // the user want to delete a normal user
-            // check if the user has the permission to delete a normal user
-            if (!thisNode->GetBitMap().GetBitAt(DELETE_USER_INDEX)) {
-                cout << "You don't have the permission to delete a normal user." << endl;
-                system("pause");
-                return targetedNode;
-            }
-            // delete the normal user
-            targetedNode = DeleteNode(targetedNode);
-        }
-    }else if(targetedNode->GetUserName() > userName){
-        // the user to delete is in the left subtree
-        targetedNode->SetLeft(Delete(userName, thisNode, targetedNode->GetLeft()));
-    }else{
-        // the user to delete is in the right subtree
-        targetedNode->SetRight(Delete(userName, thisNode, targetedNode->GetRight()));
-    }
-}
-
-Node* AVLTree::DeleteNode(Node *node) {
-    if(node->GetRight() && node->GetLeft()){
-        // the node has two children
-        Node* temp = node->GetRight();
-        while(temp->GetLeft()){
-            temp = temp->GetLeft();
-        }
-        // temp is the next node of the node to delete
-        *node = *temp;
-        node->SetRight(DeleteNode(node->GetRight(), temp));
-    }else if(node->GetRight()){
-        // replace the node with its right child
-        Node* temp = node->GetRight();
-        *node = *temp;
-        delete temp;
-        node->SetRight(nullptr);
-    }else if(node->GetLeft()){
-        // replace the node with its left child
-        Node* temp = node->GetLeft();
-        *node = *temp;
-        delete temp;
-        node->SetLeft(nullptr);
-    }else{
-        // the node is a leaf
-        delete node;
-        node = nullptr;
-    }
-    return node;
-}
-
-Node *AVLTree::DeleteNode(Node *currentNode, Node *nodeToDelete) {
-    // delete a node from the currentNode and return processed currentNode
-    // this function must be called by DeleteNode(Node* nodeToDelete)
-    if (currentNode == nullptr)
-        return nullptr;
-
-    if (currentNode == nodeToDelete) {
-        delete currentNode;
-        return nullptr;
+    if (needLL(root)) {
+      root = LL(root);
+    } else if (needLR(root)) {
+      root = LR(root);
     }
 
-    if (nodeToDelete->GetUserName() < currentNode->GetUserName()) {
-        currentNode->SetLeft(DeleteNode(currentNode->GetLeft(), nodeToDelete));
+  } else if (*newNode > *root) {
+    if (!add(newNode, root->right)) {
+      return false;
+    }
+    if (needRR(root)) {
+      root = RR(root);
+    } else if (needRL(root)) {
+      root = RL(root);
+    }
+  } else {
+    cout << "ID 已经存在!" << endl;
+    return false;
+  }
+  root->updateHeight();
+  return true;
+}
+
+bool AVLTree::add(Node *newNode) { return add(newNode, this->root); }
+
+// delete a node
+bool AVLTree::del(string targetID, Node *&root) {
+  if (root == nullptr) {
+    return false;
+  }
+  if (targetID < root->getID()) {
+    if (!del(targetID, root->left)) {
+      return false;
+    }
+    if (needRL(root)) {
+      root = RL(root);
+    } else if (needRR(root)) {
+      root = RR(root);
+    }
+  } else if (targetID > root->getID()) {
+    if (!del(targetID, root->right)) {
+      return false;
+    }
+    if (needLL(root)) {
+      root = LL(root);
+    } else if (needLR(root)) {
+      root = LR(root);
+    }
+  } else {
+    if (root->left == nullptr && root->right == nullptr) {
+      delete root;
+      root = nullptr;
+    } else if (root->left != nullptr && root->right == nullptr) {
+      *root = *root->left;
+      delete root->left;
+      root->left = NULL;
+      root->updateHeight();
+    } else if (root->left == nullptr && root->right != nullptr) {
+      *root = *root->right;
+      delete root->right;
+      root->right = NULL;
+      root->updateHeight();
     } else {
-        currentNode->SetRight(DeleteNode(currentNode->GetRight(), nodeToDelete));
+      // the target node has two children
+      // find the smallest node in the right subtree
+      Node *temp = root->right;
+      while (temp->left != nullptr) {
+        temp = temp->left;
+      }
+      *root = *temp;
+      if(!del(temp->getID(), root->right)){
+          return false;
+      }
+      // the left tree is not NULL for sure
+      if (needLR(root)) {
+        root = LR(root);
+      } else if (needLL(root)) {
+        root = LL(root);
+      }
     }
-
-    return currentNode;
+  }
+  if (root != nullptr) {
+    root->updateHeight();
+  }
+  return true;
 }
 
-Node *&AVLTree::GetLeftPtr(Node*&node) {
-    return node->left;
+bool AVLTree::del(string targetID) { return del(targetID, this->root); }
+
+// write to file
+void AVLTree::writeToFile(ofstream &os, Node *root) {
+  if (root == nullptr) {
+    return;
+  }
+  writeToFile(os, root->left);
+  root->print(os);
+  writeToFile(os, root->right);
 }
 
-Node *&AVLTree::GetRightPtr(Node*&node) {
-    return node->right;
+// load from
+void AVLTree::loadFromFile(ifstream &is) {
+  string type;
+  // the first line of every txt is the type of the node(User or book)
+  is >> type;
+  if (type == "User") {
+    string ID, password;
+    int isAdmin;
+    bool isAdminBool;
+    while (is >> ID >> password >> isAdmin) {
+      if (isAdmin == 1) {
+        isAdminBool = true;
+      } else {
+        isAdminBool = false;
+      }
+      User *user = new User(ID, password, isAdminBool);
+      add(user, root);
+    }
+  } else if (type == "Book") {
+    string ID, name, belongUserID;
+    while (is >> ID >> name >> belongUserID) {
+      if (belongUserID == "0") {
+        belongUserID = "";
+      }
+      Book *book = new Book(ID, name, belongUserID);
+      add(book, root);
+    }
+  }
+}
+
+// search for a Node
+Node *AVLTree::search(string targetID, Node *root) {
+  if (root == NULL) {
+    return NULL;
+  }
+  if (root->getID() == targetID) {
+    return root;
+  } else if (root->getID() > targetID) {
+    return search(targetID, root->left);
+  } else {
+    return search(targetID, root->right);
+  }
+}
+
+Node *AVLTree::search(string targetID) { return search(targetID, this->root); }
+
+// displayTree
+bool AVLTree::displayTree(Node *T, int depth, int right, int tap) {
+  if (T == NULL)
+    return false;
+
+  // 获取一次树的初始高度，用于计算相对偏移数量
+  static int treeDepth = this->root->getHeight();
+  // 记录当前光标位置，用于在递归中记录当前递归时树的位置
+  int x, y;
+  // 拆分树，将树的左右子树拆分开来
+  // BiTree L, R;
+  // BreakBiTree(T, L, R);
+  Node *L = T->left, *R = T->right;
+
+  // 计算父树的偏移量
+  int tap1 = tap * pow(2, treeDepth - depth)-1;
+  // 计算子树的偏移量
+  int tap2 = right * (pow(2, treeDepth - depth));
+  // 计算半偏移量
+  int tap3 = pow(2, treeDepth - depth - 1);
+
+  // 获取根的坐标
+  // x 计算方法为：父偏移量 + 子偏移量 + 半偏移量 - 1
+  // y 计算方法为：目前打印的层数 * 2
+  x = tap1 + tap2 + tap3;
+  y = depth * 2;
+
+  // 打印根的位置
+  goto(x * 2, y);
+  // printf("%d", T->data);
+  cout << T->getID();
+
+  // 在打印子树时，当前层数+1
+  depth++;
+  // 计算子树的父偏移量
+  tap = tap * 2 + (right == 1 ? 2 : 0);
+  if (L == NULL && R == NULL)
+    return true;
+  else if (R == NULL) {
+    // 打印左子树的位置
+    goto(x * 2 - tap3, y + 1);
+    printf("┏");
+    for (int i = 0; i < tap3 - 1; i++)
+      printf("━");
+    printf("┛");
+    displayTree(L, depth, 0, tap);
+  } else if (L == NULL) {
+    // 打印右子树的位置
+    goto(x * 2, y + 1);
+    printf("┗");
+    for (int i = 0; i < tap3 - 1; i++)
+      printf("━");
+    printf("┓");
+    displayTree(R, depth, 1, tap);
+  } else {
+    // 打印左右子树的位置
+    goto(x * 2 - tap3, y + 1);
+    printf("┏");
+    for (int i = 0; i < tap3 - 1; i++)
+      printf("━");
+    printf("┻");
+    for (int i = 0; i < tap3 - 1; i++)
+      printf("━");
+    printf("┓");
+    displayTree(L, depth, 0, tap);
+    displayTree(R, depth, 1, tap);
+  }
+  cout << endl;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  return true;
+}
+
+bool AVLTree::displayTree() { return displayTree(this->root, 0, 0, 0); }
+
+// display
+bool AVLTree::display(Node* root){
+  if(root == nullptr){
+    return false;
+  }
+  display(root->left);
+  root->print();
+  display(root->right);
+  return true;
+}
+
+bool AVLTree::diaplay() { return display(this->root); }
+
+// check if user have books
+bool AVLTree::isUserHaveBook(string userID, Node *root) {
+  if(root == NULL){
+    return false;
+  }
+  if(root->getBelongUserID() == userID){
+    return true;
+  }
+  if(isUserHaveBook(userID, root->left) || isUserHaveBook(userID, root->right)){
+    return true;
+  }
+  return false;
+}
+
+bool AVLTree::isUserHaveBook(string userID) {
+  return isUserHaveBook(userID, this->root);
+}
+
+// tell if tree need LL? RR? LR? RL?
+bool AVLTree::needLL(Node *root) {
+  if (root == nullptr) {
+    return false;
+  }
+  if (root->left != NULL && root->right != NULL) {
+    if (root->left->getHeight() - root->right->getHeight() > 1) {
+      if (root->left->left != NULL && root->left->right != NULL) {
+        if (root->left->left->getHeight() > root->left->right->getHeight()) {
+          return true;
+        }
+      } else if (root->left->left != NULL && root->left->right == NULL) {
+        return true;
+      } else if (root->left->left == NULL && root->left->right != NULL) {
+        return false;
+      }
+    }
+  } else if (root->left != NULL && root->right == NULL) {
+    if (root->left->getHeight() > 1) {
+      if (root->left->left != NULL && root->left->right != NULL) {
+        if (root->left->left->getHeight() > root->left->right->getHeight()) {
+          return true;
+        }else if(root->left->left->getHeight() == root->left->right->getHeight()){
+            // they are equal so both LL or LR works
+            return true;
+        }
+      } else if (root->left->left != NULL && root->left->right == NULL) {
+        return true;
+      } else if (root->left->left == NULL && root->left->right != NULL) {
+        return false;
+      }
+    }
+  } else if (root->left == NULL && root->right != NULL) {
+    return false;
+  }
+  return false;
+}
+
+bool AVLTree::needRR(Node *root) {
+  if (root == nullptr) {
+    return false;
+  }
+  if (root->left != NULL && root->right != NULL) {
+    if (root->right->getHeight() - root->left->getHeight() > 1) {
+      if (root->right->left != NULL && root->right->right != NULL) {
+        if (root->right->left->getHeight() < root->right->right->getHeight()) {
+          return true;
+        }else if (root->right->left->getHeight() == root->right->right->getHeight()){
+            // ther are equal so both RR or RL works here
+            return true;
+        }
+      } else if (root->right->left != NULL && root->right->right == NULL) {
+        return false;
+      } else if (root->right->left == NULL && root->right->right != NULL) {
+        return true;
+      }
+    }
+  } else if (root->left != NULL && root->right == NULL) {
+    return false;
+  } else if (root->left == NULL && root->right != NULL) {
+    if (root->right->getHeight() > 1) {
+      if (root->right->left != NULL && root->right->right != NULL) {
+        if (root->right->left->getHeight() < root->right->right->getHeight()) {
+          return true;
+        }
+      } else if (root->right->left != NULL && root->right->right == NULL) {
+        return false;
+      } else if (root->right->left == NULL && root->right->right != NULL) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool AVLTree::needLR(Node *root) {
+  if (root == nullptr) {
+    return false;
+  }
+  if (root->left != NULL && root->right != NULL) {
+    if (root->left->getHeight() - root->right->getHeight() > 1) {
+      if (root->left->left != NULL && root->left->right != NULL) {
+        if (root->left->left->getHeight() < root->left->right->getHeight()) {
+          return true;
+        }
+      } else if (root->left->left != NULL && root->left->right == NULL) {
+        return false;
+      } else if (root->left->left == NULL && root->left->right != NULL) {
+        return true;
+      }
+    }
+  } else if (root->left != NULL && root->right == NULL) {
+    if (root->left->getHeight() > 1) {
+      if (root->left->left != NULL && root->left->right != NULL) {
+        if (root->left->left->getHeight() < root->left->right->getHeight()) {
+          return true;
+        }
+      } else if (root->left->left != NULL && root->left->right == NULL) {
+        return false;
+      } else if (root->left->left == NULL && root->left->right != NULL) {
+        return true;
+      }
+    }
+  } else if (root->left == NULL && root->right != NULL) {
+    return false;
+  }
+  return false;
+}
+
+bool AVLTree::needRL(Node *root) {
+  if (root == nullptr) {
+    return false;
+  }
+  if (root->left != NULL && root->right != NULL) {
+    if (root->right->getHeight() - root->left->getHeight() > 1) {
+      if (root->right->left != NULL && root->right->right != NULL) {
+        if (root->right->left->getHeight() > root->right->right->getHeight()) {
+          return true;
+        }
+      } else if (root->right->left != NULL && root->right->right == NULL) {
+        return true;
+      } else if (root->right->left == NULL && root->right->right != NULL) {
+        return false;
+      }
+    }
+  } else if (root->left != NULL && root->right == NULL) {
+    return false;
+  } else if (root->left == NULL && root->right != NULL) {
+    if (root->right->getHeight() > 1) {
+      if (root->right->left != NULL && root->right->right != NULL) {
+        if (root->right->left->getHeight() > root->right->right->getHeight()) {
+          return true;
+        }
+      } else if (root->right->left != NULL && root->right->right == NULL) {
+        return true;
+      } else if (root->right->left == NULL && root->right->right != NULL) {
+        return false;
+      }
+    }
+  }
+  return false;
 }

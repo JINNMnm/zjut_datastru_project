@@ -4,405 +4,602 @@
 
 #include "../h/Console.h"
 #include "../h/const.h"
-#include <iostream>
+#include <assert.h>
+#include <cstddef>
+#include <cstdlib>
 #include <fstream>
+#include <iostream>
 using namespace std;
 
+// Constructor
+Console::Console() {
+  // init the user tree
+  avlUserTree = AVLTree();
+  avlBookTree = AVLTree();
+  nextPage = 1;
 
-void Console::WelcomeUI() {
-    system("clear");
-    cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           欢迎进入用户登陆查询系统                      |" << endl;
-    cout << "                            |           1.用户登陆                                 |" << endl;
-    cout << "                            |           2.注册用户                                 |" << endl;
-    cout << "                            |           3.关闭系统                                 |" << endl;
-    cout << "                            ------------------------------------------------------" << endl;
-    cout << "                                           请选择(1/2/3):" << endl;
+  // init the default user
+  currentUser = NULL;
 }
 
-int Console::GetUIChoice() {
-    int choice;
-    cin >> choice;
-    return choice;
-}
+void Console::init() {
+  // read the data from the file
+  ifstream userFile;
+  userFile.open(USER_FILE_PATH);
+  if (userFile.is_open()) {
+    avlUserTree.loadFromFile(userFile);
+  }
+  userFile.close();
 
-Node *Console::TryLogin(AVLTree &avlTree) {
-    // get the userName and check the password
-    // return the node if success
-    string userName;
-    string password;
-    cout << "请输入用户名:" << endl;
-    cin >> userName;
-    cout << "请输入密码:" << endl;
-    cin >> password;
-    Node* node = avlTree.FindNodeByUserName(userName);
-
-    if(!node){
-        return nullptr;
-    }
-
-    if(node->GetPassword() != password){
-        return nullptr;
-    }
-
-    return node;
-}
-
-void Console::LoginFailUI() {
-    cout << "登陆失败,用户名或密码错误!" << endl;
-}
-
-Node *Console::Login(AVLTree &avlTree) {
-    int tryTime = 0;
-    Node* node = this->TryLogin(avlTree);
-    while(!node){
-        tryTime++;
-        if(tryTime == 3){
-            cout << "登陆失败次数过多,请稍后再试!" << endl;
-            exit(1);
-        }
-        this->LoginFailUI();
-        system("pause");
-        node = this->TryLogin(avlTree);
-    }
-    return node;
-}
-
-void Console::UserUI(Node *node) {
-    system("clear");
-    cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           欢迎" << node->GetUserName() << "用户登陆查询系统" << endl;
-    cout << "                            |           1.修改密码                                 |" << endl;
-    cout << "                            |           2.注销                                    |" << endl;
-    cout << "                            |           3.退出                                    |" << endl;
-    cout << "                            ------------------------------------------------------" << endl;
-    node->PrintPermission();
-    cout << "                                           请选择(1/2):" << endl;
-}
-
-void Console::AdminUI(Node *node) {
-    system("clear");
-    cout << "                            ------------------------------------------------------" << endl;
-    cout << "                            |           欢迎" << node->GetUserName() << "管理员登陆查询系统" << endl;
-    cout << "                            |           1.修改密码                                 |" << endl;
-    cout << "                            |           2.修改权限                                 |" << endl;
-    cout << "                            |           3.注销用户                                 |" << endl;
-    cout << "                            |           4.新增用户                                 |" << endl;
-    cout << "                            |           5.退出                                     |" << endl;
-    cout << "                            ------------------------------------------------------" << endl;
-    node->PrintPermission();
-    cout << "                                           请选择(1/2/3/4/5):" << endl;
-}
-
-void Console::DeleteUser(AVLTree &avlTree, Node *thisNode) {
-    char choice;
-    if(thisNode->GetIsAdmin()){
-        cout << "是否要注销本账户(y/n)" << endl;
-        cin >> choice;
-        if(choice == 'y'){
-           if(thisNode->GetBitMap().IsRoot()){
-                cout << "您是根用户，无法注销" << endl;
-               system("pause");
-                return ;
-           }
-           avlTree.Delete(thisNode->GetUserName(), thisNode, avlTree.GetRoot());
-            cout << "注销成功" << endl;
-            avlTree.WriteTreeToFile(fileName);
-            system("pause");
-           nextPage = 1;
-        }else if(choice == 'n'){
-            cout << "请输入要注销的用户名" << endl;
-            string userName;
-            cin >> userName;
-            avlTree.Delete(userName, thisNode, avlTree.GetRoot());
-            avlTree.WriteTreeToFile(fileName);
-        }else{
-            cout << "输入错误" << endl;
-            system("pause");
-        }
-    }else{
-        cout << "您不是管理员，只能注销本账户，是否注销？(y/n)" << endl;
-        cin >> choice;
-        if(choice == 'y'){
-            avlTree.Delete(thisNode->GetUserName(), thisNode, avlTree.GetRoot());
-            cout << "注销成功" << endl;
-            avlTree.WriteTreeToFile(fileName);
-            system("pause");
-            nextPage = 1;
-        }else if(choice == 'n'){
-            cout << "您不是管理员，无法注销其他用户" << endl;
-            system("pause");
-        }
-    }
-}
-
-void Console::Register(AVLTree &avlTree, Node *currentUser) {
-    if(currentUser->GetIsAdmin()){
-        bool isAdmin;
-        cout << "是否注册管理员(y/n)" << endl;
-        string choice;
-        cin >> choice;
-        if(choice == "y"){
-            isAdmin = true;
-        }else if(choice == "n"){
-            isAdmin = false;
-        }else{
-            cout << "输入错误" << endl;
-            system("pause");
-            return;
-        }
-        if(isAdmin){
-            RegisterAdmin(avlTree, currentUser);
-        }else{
-            RegisterUser(avlTree, currentUser);
-        }
-    }else{
-        RegisterUser(avlTree, currentUser);
-    }
-    avlTree.WriteTreeToFile(fileName);
-}
-
-void Console::RegisterUser(AVLTree &avlTree, Node *currentUser) {
-    // get the userName and check the password
-    string userName, password, passwordCheck;
-    cout << "请输入用户名:" << endl;
-    cin >> userName;
-    cout << "请输入密码:" << endl;
-    cin >> password;
-    // check if the userName exist
-    Node* node = avlTree.FindNodeByUserName(userName);
-    if(node){
-        cout << "用户名已存在!" << endl;
-        system("pause");
-        return;
-    }
-    // double-check the password
-    cout << "请再次输入密码:" << endl;
-    cin >> passwordCheck;
-    if(password != passwordCheck){
-        cout << "两次输入的密码不一致!" << endl;
-        system("pause");
-        return;
-    }
-    // register the user
-    avlTree.Insert(userName, password, false, currentUser);
-}
-
-void Console::RegisterAdmin(AVLTree &avlTree, Node *currentUser) {
-    // get the userName and check the password
-    string userName, password, passwordCheck;
-    cout << "请输入用户名:" << endl;
-    cin >> userName;
-    cout << "请输入密码:" << endl;
-    cin >> password;
-    // check if the userName exist
-    Node* node = avlTree.FindNodeByUserName(userName);
-    if(node){
-        cout << "用户名已存在!" << endl;
-        system("pause");
-        return;
-    }
-    // double-check the password
-    cout << "请再次输入密码:";
-    cin >> passwordCheck;
-    if(password != passwordCheck){
-        cout << "两次输入的密码不一致!";
-        system("pause");
-        return;
-    }
-    // ask if you need to set the permission
-    cout << "是否需要设置权限，不设置则将使用管理员默认权限？(y/n)" ;
-    string choice;
-    cin >> choice;
-    string bitMapString;
-    if(choice == "y"){
-        cout << "请输入6比特权限字符串:" << endl;
-        PermisstionBitMapExplainedUI();
-        cin >> bitMapString;
-    }else{
-        bitMapString = ADMIN_PERMISSION_DEFAULT;
-    }
-    // register the user
-    if(avlTree.Insert(userName, password, true, currentUser, bitMapString)){
-        cout << "注册成功!" << endl;
-        system("pause");
-    }
-}
-
-void Console::CleanWindow() {
-    system("clear");
+  // read the data from the file
+  ifstream bookFile;
+  bookFile.open(BOOK_FILE_PATH);
+  if (bookFile.is_open()) {
+    avlBookTree.loadFromFile(bookFile);
+    // avlBookTree.displayTree();
+  }
+  bookFile.close();
 }
 
 void Console::Run() {
-    switch (nextPage) {
-        case 1:
-            PageOne();
-            break;
-        case 2:
-            PageTwo();
-            break;
-    }
+  switch (nextPage) {
+  case 1:
+    InitPage();
+    break;
+  case 2:
+    UserPage();
+    break;
+  case 3:
+    AdminPage();
+    break;
+  case 4:
+    // close
+    cout << "感谢使用!" << endl;
+    Pause();
+    exit(0);
+  }
 }
 
-Console::Console(string fileName) {
-    // read the file and init the tree
-    avlUserTree.ReadTreeFromFile(fileName);
+void Console::InitPage() {
+  // welcome ui and get the choice
+  CleanWindow();
+  Console::WelcomeUI();
 
-    this->fileName = fileName;
+  int choice = Console::GetUIChoice();
+
+  switch (choice) {
+  case UI_LOGIN:
+    // login
+    currentUser = Login(avlUserTree);
+    if (currentUser != NULL) {
+      if (currentUser->getAdmin() == false) {
+        nextPage = 2;
+      } else {
+        nextPage = 3;
+      }
+    }
+    Pause();
+    break;
+  case UI_REGISTER:
+    // register
+    Console::Register(avlUserTree);
+    Pause();
+    break;
+  case UI_CLOSE:
+    // close
+    nextPage = 4;
+    break;
+  }
+}
+
+// User Page
+void Console::UserPage() {
+  // user ui and get the choice
+  CleanWindow();
+  Console::UserUI(currentUser);
+
+  int choice = Console::GetUIChoice();
+
+  switch (choice) {
+  case USER_BORROW_BOOK:
+    // borrow book
+    BorrowBook(avlBookTree);
+    Pause();
+    break;
+  case USER_RETURN_BOOK:
+    // return book
+    ReturnBook(avlBookTree);
+    Pause();
+    break;
+  case USER_QUERY_BOOK:
+    // query book
+    QueryBook(avlBookTree);
+    Pause();
+    break;
+  case USER_DELETE_SELF:
+    // delete self
+    if (DeleteSelf(avlUserTree, avlBookTree)) {
+      nextPage = 1;
+    } else {
+      nextPage = 2;
+    }
+    Pause();
+    break;
+  case USER_LOGOUT:
     nextPage = 1;
-
-    // init the default user
-    defaultUser = new Node("1","1",1,false,"100000");
-    currentUser = nullptr;
+    currentUser = NULL;
+    break;
+  }
 }
 
-void Console::PageOne() {
-    // welcome ui and get the choice
+void Console::AdminPage() {
+  // user ui and get the choice
+  CleanWindow();
+  Console::AdminUI(currentUser);
+
+  int choice = Console::GetUIChoice();
+
+  switch (choice) {
+  case ADMIN_ADD_BOOK:
+    // add a new book
+    AddBook(avlBookTree);
+    Pause();
+    break;
+  case ADMIN_DELETE_BOOK:
+    // delete a book
+    DeleteBook(avlBookTree);
+    Pause();
+    break;
+  case ADMIN_QUERY_BOOK:
+    // query a book
+    QueryBook(avlBookTree);
+    Pause();
+    break;
+  case ADMIN_DISPLAY_BOOK:
+    // display all book
+    DisplayBook(avlBookTree, true);
+    Pause();
+    break;
+  case ADMIN_DISPLAY_USER:
+    // display all user
+    DisplayUser(avlUserTree, true);
+    Pause();
+    break;
+  case ADMIN_DELETE_USER:
+    // delete a user
+    DeleteUser(avlUserTree, avlBookTree);
+    Pause();
+    break;
+  case ADMIN_LOGOUT:
+    nextPage = 1;
+    currentUser = NULL;
+    break;
+  }
+}
+
+// Register
+bool Console::Register(AVLTree &avlTree) {
+  // get the user name and password
+  string userName, password;
+  cout << "请输入用户名:";
+  cin >> userName;
+  cout << "请输入密码:";
+  cin >> password;
+
+  // search for the user
+  Node *node = avlTree.search(userName);
+  if (node == NULL) {
+    User *user = new User(userName, password, false);
+    if (avlTree.add(user)) {
+      cout << "注册成功!" << endl;
+      writeUserToFile();
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    // register fail
+    cout << "注册失败,用户名已存在!" << endl;
+    return false;
+  }
+}
+
+// Login
+Node *Console::Login(AVLTree &avlTree) {
+  // get the user name and password
+  string userName, password;
+  cout << "请输入用户名:";
+  cin >> userName;
+  cout << "请输入密码:";
+  cin >> password;
+
+  // search for the user
+  Node *node = avlTree.search(userName);
+  if (node == NULL) {
+    // login fail
+    LoginFailUI();
+    return NULL;
+  } else {
+    // login successfully
+    if (node->getPassword() == password) {
+      cout << "登陆成功!" << endl;
+      return node;
+    } else {
+      LoginFailUI();
+      return NULL;
+    }
+  }
+}
+
+// query book
+bool Console::QueryBook(AVLTree &avlTree) {
+  // get the book ID
+  string bookID;
+  Node *targetedBook;
+  cout << "请输入要查询的书籍ID:";
+  cin >> bookID;
+  targetedBook = avlTree.search(bookID);
+  if (targetedBook != NULL) {
+    // book exist
+    cout << "书籍ID:" << targetedBook->getID() << endl;
+    cout << "书籍名称:" << targetedBook->getName() << endl;
+    if (targetedBook->getBelongUserID() == "") {
+      cout << "书籍情况:未被借阅" << endl;
+    } else {
+      cout << "书籍情况:已被用户" << targetedBook->getBelongUserID() << "借阅"
+           << endl;
+    }
+    return true;
+  } else {
+    // book not exist
+    cout << "查询失败,该书不存在!" << endl;
+    return false;
+  }
+  return true;
+}
+
+// display book
+bool Console::DisplayBook(AVLTree &avlTree, bool isTree) {
+  // this is the admin-only function
+  if (isTree) {
+    assert(currentUser->getAdmin() == true);
     CleanWindow();
-    Console::WelcomeUI();
-
-    int choice = Console::GetUIChoice();
-
-    switch (choice) {
-        case UI_LOGIN:
-            // login
-            currentUser = Login(avlUserTree);
-            if(currentUser->GetIsAdmin()){
-                // admin page
-                PageTwo();
-            }else{
-                // user page
-                Console::UserUI(currentUser);
-            }
-            break;
-        case UI_REGISTER:
-            // register
-            Console::Register(avlUserTree, defaultUser);
-            break;
-        case UI_CLOSE:
-            // close
-            break;
-    }
+    cout << "Book Tree:";
+    avlTree.displayTree();
+    cout << endl;
+  } else {
+    avlTree.diaplay();
+  }
+  return true;
 }
 
-void Console::PageTwo() {
+// display user
+bool Console::DisplayUser(AVLTree &avlTree, bool isTree) {
+  // this is the admin-only function
+  if (isTree) {
+    assert(currentUser->getAdmin() == true);
     CleanWindow();
-    nextPage = 2;
-    int choice;
-    Console::AdminUI(currentUser);
-    choice = Console::GetUIChoice();
-    switch (choice) {
-        case ADMIN_UI_CHANGE_PASSWORD:
-            // change password
-            ChangePassword(avlUserTree, currentUser);
-            break;
-        case ADMIN_UI_CHANGE_PERMISSION:
-            // change permission
-            ChangePermission(avlUserTree, currentUser);
-            break;
-        case ADMIN_UI_DESTROY_USER:
-            // delete user
-            DeleteUser(avlUserTree, currentUser);
-            break;
-        case ADMIN_UI_INSERT_USER:
-            // insert user
-            Register(avlUserTree, currentUser);
-            break;
-        case ADMIN_UI_RETURN:
-            // return
-            nextPage = 1;
-            break;
-    }
+    cout << "User Tree:";
+    avlTree.displayTree();
+    cout << endl << endl;
+  } else {
+    assert(currentUser->getAdmin() == true);
+    avlTree.diaplay();
+  }
+  return true;
 }
 
-void Console::ChangePassword(AVLTree &avlTree, Node *currentUser) {
-    // get the password and check the password
-    string password, passwordCheck;
-    cout << "请输入原密码:" << endl;
-    cin >> password;
-    if(password != currentUser->GetPassword()){
-        cout << "密码错误!" << endl;
-        system("pause");
-        return;
+// Add book
+bool Console::AddBook(AVLTree &avlTree) {
+  // this is the admin-only function
+  assert(currentUser->getAdmin() == true);
+  // get the book Info
+  string ID, name;
+  cout << "请输入书籍ID:";
+  cin >> ID;
+  cout << "请输入书籍名称:";
+  cin >> name;
+  // search for the bookID
+  Node *targetedBook = avlTree.search(ID);
+  if (targetedBook != NULL) {
+    // the bookID already exit
+    cout << "ID为:" << ID << "的书籍已存在!" << endl;
+    return false;
+  } else {
+    // the bookID not exit
+    Book *book = new Book(ID, name, "");
+    if (avlTree.add(book)) {
+      cout << "添加成功!" << endl;
+      writeBookToFile();
+      return true;
+    } else {
+      return false;
     }
-    // double-check the password
-    cout << "请输入新密码:" << endl;
-    cin >> password;
-    cout << "请再次输入新密码:" << endl;
-    cin >> passwordCheck;
-    if(password != passwordCheck){
-        cout << "两次输入的密码不一致!" << endl;
-        system("pause");
-        return;
-    }
-    // change the password
-    currentUser->SetPassword(password);
-    // write the tree to file
-    avlTree.WriteTreeToFile(fileName);
-    // change password successfully
-    ChangePasswordSuccessfullyUI();
-    // pause
-    system("pause");
+  }
 }
 
-void Console::ChangePasswordSuccessfullyUI() {
-    cout << "密码修改成功!" << endl;
+// Delete Book
+bool Console::DeleteBook(AVLTree &avlTree) {
+  // this is the admin-only function
+  assert(currentUser->getAdmin() == true);
+  // get the book ID
+  string bookID;
+  Node *targetedBook;
+  cout << "请输入要删除的书籍ID:";
+  cin >> bookID;
+  targetedBook = avlTree.search(bookID);
+  if (targetedBook != NULL) {
+    // book exist
+    if (targetedBook->getBelongUserID() == "") {
+      // book is not borrowed
+      if (avlTree.del(bookID)) {
+        cout << "删除成功!" << endl;
+        writeBookToFile();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // book is borrowed
+      cout << "删除失败,该书已被用户" << targetedBook->getBelongUserID()
+           << "借阅!" << endl;
+      return false;
+    }
+  } else {
+    // book not exist
+    cout << "删除失败,该书不存在!" << endl;
+    return false;
+  }
 }
 
-void Console::ChangePermission(AVLTree &avlTree, Node *currentUser) {
-    // first check if the user is admin
-    if(!currentUser->GetIsAdmin()){
-        cout << "您不是管理员，无法修改权限!" << endl;
-        system("pause");
-        return;
+// delete user
+bool Console::DeleteUser(AVLTree& avlUser, AVLTree& avlBook){
+  // show all user
+  cout << endl;
+  cout << "以下是所有用户:" << endl << endl;
+  DisplayUser(avlUser, false);
+  cout << endl;
+
+  // this is the admin-only function
+  assert(currentUser->getAdmin() == true);
+  // get the user ID
+  string userID;
+  Node *targetedUser;
+  cout << "请输入要删除的用户ID:";
+  cin >> userID;
+  targetedUser = avlUser.search(userID);
+  if (targetedUser != NULL) {
+    // user exist
+    if(targetedUser->getAdmin() == true){
+      cout << "删除失败,该用户是管理员!" << endl;
+      return false;
     }
-    // get the userName
-    string userName;
-    cout << "请输入要修改权限的用户名:" << endl;
-    cin >> userName;
-    // check if the user exist
-    Node* targetedUser = avlTree.FindNodeByUserName(userName);
-    if(!targetedUser){
-        cout << "该用户不存在!" << endl;
-        system("pause");
-        return;
+    if (!avlBook.isUserHaveBook(userID)) {
+      // user have returned all the books
+      if (avlUser.del(userID)) {
+        cout << "删除成功!" << endl;
+        writeUserToFile();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // user have not returned all the books
+      cout << "删除失败,该用户还有书籍未归还!" << endl;
+      return false;
     }
-    std::string otherPermissionString = GetPermissionInput();
-    if(otherPermissionString.empty()){
-        return;
-    }
-    avlTree.ChangePermission(targetedUser, currentUser, otherPermissionString);
-    avlTree.WriteTreeToFile(fileName);
+  } else {
+    // user not exist
+    cout << "删除失败,该用户不存在!" << endl;
+    return false;
+  }
 }
 
-void Console::CannotChangePermissionUI() {
-    cout << "修改权限失败!" << endl;
-}
-
-void Console::PermisstionBitMapExplainedUI() {
-    // explain the permission bit map
-    cout << "权限位图说明(1表示有、0表示无):" << endl;
-    cout << "第一位:新增用户权限;" << endl;
-    cout << "第二位:新增管理员权限;" << endl;
-    cout << "第三位:删除用户权限;" << endl;
-    cout << "第四位:删除管理员权限;" << endl;
-    cout << "第五位:修改用户权限;" << endl;
-    cout << "第六位:修改管理员权限;" << endl;
-}
-
-std::string Console::GetPermissionInput() {
-    Console::PermisstionBitMapExplainedUI();
-    string bitMapString;
-    cout << "请输入6比特权限01字符串:" << endl;
-    cin >> bitMapString;
-    if(bitMapString.length() != 6){
-        cout << "输入的字符串长度不为6!" << endl;
-        system("pause");
-        return "";
-    }else if(bitMapString.find_first_not_of("01") != string::npos){
-        cout << "输入的字符串不是01字符串!" << endl;
-        system("pause");
-        return "";
+// Borrow Book
+bool Console::BorrowBook(AVLTree &avlTree) {
+  // display all book
+  cout << endl;
+  cout << "以下是所有书籍:" << endl << endl;
+  DisplayBook(avlTree, false);
+  cout << endl;
+  // get the book ID
+  string bookID;
+  Node *targetedBook;
+  cout << "请输入要借阅的书籍ID:";
+  cin >> bookID;
+  targetedBook = avlTree.search(bookID);
+  if (targetedBook != NULL) {
+    // book exist
+    if (targetedBook->getBelongUserID() == "") {
+      // book is not borrowed
+      targetedBook->setBelongUserID(currentUser->getID());
+      cout << "借阅成功!" << endl;
+      writeBookToFile();
+      return true;
+    } else {
+      // book is borrowed
+      cout << "借阅失败,该书已被借阅!" << endl;
+      return false;
     }
-    return bitMapString;
+  } else {
+    // book not exist
+    cout << "借阅失败,该书不存在!" << endl;
+    return false;
+  }
+}
+
+// Return book
+bool Console::ReturnBook(AVLTree &avlTree) {
+  // get the book ID
+  string bookID;
+  Node *targetedBook;
+  cout << "请输入要归还的书籍ID:";
+  cin >> bookID;
+  targetedBook = avlTree.search(bookID);
+  if (targetedBook != NULL) {
+    // book exist
+    if (targetedBook->getBelongUserID() == currentUser->getID()) {
+      // book is not borrowed
+      targetedBook->setBelongUserID("");
+      cout << "归还成功!" << endl;
+      writeBookToFile();
+      return true;
+    } else {
+      // book is borrowed
+      cout << "归还失败,您似乎没有借阅该书籍!" << endl;
+      return false;
+    }
+  } else {
+    // book not exist
+    cout << "归还失败,该书不存在!" << endl;
+    return false;
+  }
+}
+
+// Delete self
+bool Console::DeleteSelf(AVLTree &avlUser, AVLTree &avlBook) {
+  // check if the user have returned all the books
+  if (avlBook.isUserHaveBook(currentUser->getID())) {
+    cout << "注销失败,您还有书籍未归还!" << endl;
+    return false;
+  }
+  cout << "请输入密码:";
+  string password;
+  cin >> password;
+  if (password == currentUser->getPassword()) {
+    if (avlUser.del(currentUser->getID())) {
+      cout << "注销成功!" << endl;
+      writeUserToFile();
+      return true;
+    } else {
+      cout << "注销失败!" << endl;
+      return false;
+    }
+  } else {
+    cout << "注销失败,密码错误!" << endl;
+    return false;
+  }
+}
+
+// write User and Book to file
+void Console::writeBookToFile() {
+  ofstream bookFile;
+  bookFile.open(BOOK_FILE_PATH);
+  if (bookFile.is_open()) {
+    bookFile << "Book" << endl;
+    avlBookTree.writeToFile(bookFile, avlBookTree.getRoot());
+  }
+  bookFile.close();
+}
+
+void Console::writeUserToFile() {
+  ofstream userFile;
+  userFile.open(USER_FILE_PATH);
+  if (userFile.is_open()) {
+    userFile << "User" << endl;
+    avlUserTree.writeToFile(userFile, avlUserTree.getRoot());
+  }
+  userFile.close();
+}
+
+int Console::GetUIChoice() {
+  int choice;
+  cin >> choice;
+  return choice;
+}
+
+void Console::LoginFailUI() { cout << "登陆失败,用户名或密码错误!" << endl; }
+
+void Console::WelcomeUI() {
+  system("clear");
+  cout << "                            "
+          "------------------------------------------------------"
+       << endl;
+  cout << "                            |           欢迎进入用户登陆查询系统    "
+          "              |"
+       << endl;
+  cout << "                            |           1.用户登陆                  "
+          "              |"
+       << endl;
+  cout << "                            |           2.注册用户                  "
+          "              |"
+       << endl;
+  cout << "                            |           3.关闭系统                  "
+          "              |"
+       << endl;
+  cout << "                            "
+          "------------------------------------------------------"
+       << endl;
+  cout << "                                           请选择(1/2/3):" << endl;
+}
+
+void Console::UserUI(Node *node) {
+  system("clear");
+  cout << "                            "
+          "------------------------------------------------------"
+       << endl;
+  cout << "                           |           欢迎" << node->getID()
+       << "用户登陆查询系统" << endl;
+  cout << "                           |           1.借阅书籍                  "
+          "              |"
+       << endl;
+  cout << "                           |           2.归还书籍                  "
+          "              |"
+       << endl;
+  cout << "                           |           3.查询书籍                  "
+          "              |"
+       << endl;
+  cout << "                           |           4.注销账号                  "
+          "              |"
+       << endl;
+  cout << "                           |           5.退出登陆                  "
+          "              |"
+       << endl;
+  cout << "                           "
+          "------------------------------------------------------"
+       << endl;
+  cout << "                                           请选择(1/2/3/4/5):"
+       << endl;
+}
+
+void Console::AdminUI(Node *node) {
+  system("clear");
+  cout << "                            "
+          "------------------------------------------------------"
+       << endl;
+  cout << "                            |           欢迎" << node->getID()
+       << "管理员登陆查询系统" << endl;
+  cout << "                            |           1.添加新书                  "
+          "              |"
+       << endl;
+  cout << "                            |           2.删除旧书                  "
+          "              |"
+       << endl;
+  cout << "                            |           3.查询书籍                  "
+          "              |"
+       << endl;
+  cout << "                            |           4.展示书籍树                "
+          "              |"
+       << endl;
+  cout << "                            |           5.展示用户树                "
+          "              |"
+       << endl;
+  cout << "                            |           6.删除用户                  "
+          "              |"
+       << endl;
+  cout << "                            |           7.退出登陆                  "
+          "              |"
+       << endl;
+  cout << "                            "
+          "------------------------------------------------------"
+       << endl;
+  cout << "                                           请选择(1/2/3/4/5/6/7):"
+       << endl;
+}
+
+void Console::CleanWindow() { system("clear"); }
+
+void Console::Pause() {
+  cout << "按任意键继续..." << endl;
+  system("read");
 }

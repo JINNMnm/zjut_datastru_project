@@ -11,7 +11,8 @@ add_executable(code
         cpp/AVLTree.cpp
         h/Console.h
         cpp/Console.cpp
-        h/BitMap.h
-        cpp/BitMap.cpp
-        cpp/BitMap.cpp
-        h/const.h)
+        h/const.h
+        h/User.h
+        cpp/User.cpp
+        h/Book.h
+        cpp/Book.cpp)

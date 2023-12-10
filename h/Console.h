@@ -4,63 +4,74 @@
 
 #ifndef CODE_CONSOLE_H
 #define CODE_CONSOLE_H
-#include <string>
-#include "Node.h"
 #include "AVLTree.h"
-#include "BitMap.h"
+#include "Book.h"
+#include "Node.h"
+#include "User.h"
+#include <string>
 
 class Console {
 public:
-    // Constructor
-    Console(string fileName);
+  // Constructor
+  Console();
+  // init the console,namely read the data from the file and build the tree
+  void init();
 
-    // run the console
-    void Run();
-    void PageOne();
-    void PageTwo(); // Admin page
+  // run the console
+  void Run();
+  void InitPage();
+  void UserPage(); 
+  void AdminPage();
 
-    // UI
-    static void WelcomeUI();
-    static void UserUI(Node* node);
-    static void AdminUI(Node* node);
+  // UI
+  static void WelcomeUI();
+  static void UserUI(Node *node);
+  static void AdminUI(Node *node);
 
-    // other function
-    static int GetUIChoice();
-    static void CleanWindow();
-    static std::string GetPermissionInput();
+  // other function
+  static int GetUIChoice();
+  static void CleanWindow();
+  static void Pause();
 
-    // main function
-    void DeleteUser(AVLTree& avlTree, Node* thisNode);
-    void Register(AVLTree& avlTree, Node* currentUser);
-    void ChangePassword(AVLTree& avlTree, Node* currentUser);
-    void ChangePermission(AVLTree& avlTree, Node* currentUser);
-    Node* Login(AVLTree& avlTree);
+  // main function
+  bool Register(AVLTree &avlTree);
+  Node *Login(AVLTree &avlTree);
+  bool QueryBook( AVLTree &avlTree);
+
+  // Admin
+  bool AddBook(AVLTree &avlTree);
+  bool DeleteBook(AVLTree &avlTree);
+  bool DisplayBook(AVLTree &avlTree, bool isTree);
+  bool DisplayUser(AVLTree &avlTree, bool isTree);
+  bool DeleteUser(AVLTree& avlUserTree, AVLTree& avlBookTree);
+
+  // Normal User
+  bool BorrowBook(AVLTree &avlTree);
+  bool ReturnBook(AVLTree &avlTree);
+  bool DeleteSelf(AVLTree &avlUserTree, AVLTree& avlBookTree);
+
+  // write User and Book to file
+  void writeUserToFile();
+  void writeBookToFile();
 
 private:
-    // User Tree
-    AVLTree avlUserTree;
+  // User Tree
+  AVLTree avlUserTree;
+  AVLTree avlBookTree;
 
-    // current user
-    Node* currentUser;
+  // current user
+  Node *currentUser;
 
-    // default user
-    Node* defaultUser;
+  // next page
+  int nextPage;
 
-    // file name
-    string fileName;
+  // try to log in
+  Node *TryLogin(AVLTree &avlTree);
 
-    // next page
-    int nextPage;
-
-    // try to log in
-    Node* TryLogin(AVLTree& avlTree);
-    static void RegisterUser(AVLTree& avlTree, Node* currentUser);
-    static void RegisterAdmin(AVLTree& avlTree, Node* currentUser);
-
-    // UI
-    static void LoginFailUI();
-    static void ChangePasswordSuccessfullyUI();
-    static void CannotChangePermissionUI();
-    static void PermisstionBitMapExplainedUI();
+  // UI
+  static void LoginFailUI();
+  static void ChangePasswordSuccessfullyUI();
+  static void CannotChangePermissionUI();
+  static void PermisstionBitMapExplainedUI();
 };
-#endif //CODE_CONSOLE_H
+#endif // CODE_CONSOLE_H

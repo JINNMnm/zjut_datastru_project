@@ -2,95 +2,64 @@
 // Created by 31320 on 2023/9/29.
 //
 
-# include "../h/Node.h"
-#include "../h/BitMap.h"
-#include <iostream>
+#include "../h/Node.h"
 using namespace std;
-const int PERMISSION_NUM = 6;
 
-Node::Node(std::string userName, std::string password,int height,bool isAdmin,string bitMapString):
-        userName(std::move(userName)),
-        password(std::move(password)),
-        height(height),
-        isAdmin(isAdmin),
-        bitMap(BitMap(PERMISSION_NUM,bitMapString)),
-        left(nullptr),
-        right(nullptr){}
-
-const string &Node::GetUserName() const {
-    return this->userName;
+// Constructor
+Node::Node() {
+  this->ID = "";
+  this->left = nullptr;
+  this->right = nullptr;
+  this->height = 1;
 }
 
-void Node::SetUserName(const string &userName) {
-    this->userName = userName; // use the move semantics
+Node::Node(string ID) {
+  this->ID = ID;
+  this->left = nullptr;
+  this->right = nullptr;
+  this->height = 1;
 }
 
-const string &Node::GetPassword() const {
-    return this->password;
+// Destructor
+Node::~Node() {
+  this->ID = "";
+  this->left = nullptr;
+  this->right = nullptr;
+  this->height = 0;
 }
 
-void Node::SetPassword(const string &password) {
-    this->password = password; // use the move semantics
+// getter and setter
+string Node::getID() { return this->ID; }
+
+void Node::setID(string ID) { this->ID = ID; }
+
+int Node::getHeight() { return this->height; }
+
+void Node::setHeight(int height) { this->height = height; }
+
+void Node::updateHeight() {
+  if (this->left == nullptr && this->right == nullptr) {
+    this->height = 1;
+  } else if (this->left == nullptr) {
+    this->height = this->right->getHeight() + 1;
+  } else if (this->right == nullptr) {
+    this->height = this->left->getHeight() + 1;
+  } else {
+    this->height = max(this->left->getHeight(), this->right->getHeight()) + 1;
+  }
 }
 
-Node *Node::GetLeft() const  {
-    return this->left;
-}
+// over write operator: > < = ==
+bool Node::operator>(Node &node) { return this->ID > node.getID(); }
 
-void Node::SetLeft(Node *left) {
-    this->left = left;
-}
+bool Node::operator<(Node &node) { return this->ID < node.getID(); }
 
-Node *Node::GetRight() const  {
-    return this->right;
-}
+bool Node::operator==(Node &node) { return this->ID == node.getID(); }
 
-void Node::SetRight(Node *right) {
-    this->right = right;
+Node &Node::operator=(Node &node) {
+  this->ID = node.getID();
+  this->left = node.left;
+  this->right = node.right;
+  this->height = node.getHeight();
+  return *this;
 }
-
-int Node::GetHeight() const {
-    return this->height;
-}
-
-void Node::SetHeight(int height) {
-    this->height = height;
-}
-
-bool Node::GetIsAdmin() const {
-    return this->isAdmin;
-}
-
-void Node::SetIsAdmin(bool isAdmin) {
-    this->isAdmin = isAdmin;
-}
-
-const BitMap & Node::GetBitMap() const {
-    return this->bitMap;
-}
-
-void Node::SetBitMap(const string &bitMapString) {
-    // bitMapString is a string of 0 and 1
-    this->bitMap.SetBitMap(bitMapString);
-}
-
-void Node::PrintPermission() const {
-    BitMap thisBitMap = this->GetBitMap();
-    cout << "您当前的权限为：" << endl;
-    this->GetBitMap().PrintBitMap();
-    if(thisBitMap.IsRoot()){
-        cout << "您当前为超级管理员，拥有所有权限，请注意！！！" << endl;
-    }
-}
-
-Node &Node::operator=(const Node &node) {
-    this->userName = node.userName;
-    this->password = node.password;
-    this->isAdmin = node.isAdmin;
-    this->height = node.height;
-    this->bitMap = node.bitMap;
-    this->left = node.left;
-    this->right = node.right;
-    return *this;
-}
-

@@ -3,6 +3,7 @@
   <component name="Encoding" defaultCharsetForPropertiesFiles="GBK">
     <file url="file://$PROJECT_DIR$/cpp/AVLTree.cpp" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cpp/BitMap.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cpp/Book.cpp" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cpp/Console.cpp" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cpp/Node.cpp" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cpp/main.cpp" charset="UTF-8" />

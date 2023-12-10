@@ -125,19 +125,33 @@ CMakeFiles/code.dir/cpp/Console.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/code.dir/cpp/Console.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/Console.cpp" -o CMakeFiles/code.dir/cpp/Console.cpp.s
 
-CMakeFiles/code.dir/cpp/BitMap.cpp.o: CMakeFiles/code.dir/flags.make
-CMakeFiles/code.dir/cpp/BitMap.cpp.o: /Users/jin/Downloads/uni/code/c++/data_structure/zjut/final\ work/finalWorkResult/code/cpp/BitMap.cpp
-CMakeFiles/code.dir/cpp/BitMap.cpp.o: CMakeFiles/code.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/Debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/code.dir/cpp/BitMap.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/code.dir/cpp/BitMap.cpp.o -MF CMakeFiles/code.dir/cpp/BitMap.cpp.o.d -o CMakeFiles/code.dir/cpp/BitMap.cpp.o -c "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/BitMap.cpp"
+CMakeFiles/code.dir/cpp/User.cpp.o: CMakeFiles/code.dir/flags.make
+CMakeFiles/code.dir/cpp/User.cpp.o: /Users/jin/Downloads/uni/code/c++/data_structure/zjut/final\ work/finalWorkResult/code/cpp/User.cpp
+CMakeFiles/code.dir/cpp/User.cpp.o: CMakeFiles/code.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/Debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/code.dir/cpp/User.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/code.dir/cpp/User.cpp.o -MF CMakeFiles/code.dir/cpp/User.cpp.o.d -o CMakeFiles/code.dir/cpp/User.cpp.o -c "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/User.cpp"
 
-CMakeFiles/code.dir/cpp/BitMap.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/code.dir/cpp/BitMap.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/BitMap.cpp" > CMakeFiles/code.dir/cpp/BitMap.cpp.i
+CMakeFiles/code.dir/cpp/User.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/code.dir/cpp/User.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/User.cpp" > CMakeFiles/code.dir/cpp/User.cpp.i
 
-CMakeFiles/code.dir/cpp/BitMap.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/code.dir/cpp/BitMap.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/BitMap.cpp" -o CMakeFiles/code.dir/cpp/BitMap.cpp.s
+CMakeFiles/code.dir/cpp/User.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/code.dir/cpp/User.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/User.cpp" -o CMakeFiles/code.dir/cpp/User.cpp.s
+
+CMakeFiles/code.dir/cpp/Book.cpp.o: CMakeFiles/code.dir/flags.make
+CMakeFiles/code.dir/cpp/Book.cpp.o: /Users/jin/Downloads/uni/code/c++/data_structure/zjut/final\ work/finalWorkResult/code/cpp/Book.cpp
+CMakeFiles/code.dir/cpp/Book.cpp.o: CMakeFiles/code.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/Debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/code.dir/cpp/Book.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/code.dir/cpp/Book.cpp.o -MF CMakeFiles/code.dir/cpp/Book.cpp.o.d -o CMakeFiles/code.dir/cpp/Book.cpp.o -c "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/Book.cpp"
+
+CMakeFiles/code.dir/cpp/Book.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/code.dir/cpp/Book.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/Book.cpp" > CMakeFiles/code.dir/cpp/Book.cpp.i
+
+CMakeFiles/code.dir/cpp/Book.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/code.dir/cpp/Book.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/cpp/Book.cpp" -o CMakeFiles/code.dir/cpp/Book.cpp.s
 
 # Object files for target code
 code_OBJECTS = \
@@ -145,7 +159,8 @@ code_OBJECTS = \
 "CMakeFiles/code.dir/cpp/Node.cpp.o" \
 "CMakeFiles/code.dir/cpp/AVLTree.cpp.o" \
 "CMakeFiles/code.dir/cpp/Console.cpp.o" \
-"CMakeFiles/code.dir/cpp/BitMap.cpp.o"
+"CMakeFiles/code.dir/cpp/User.cpp.o" \
+"CMakeFiles/code.dir/cpp/Book.cpp.o"
 
 # External object files for target code
 code_EXTERNAL_OBJECTS =
@@ -154,10 +169,11 @@ code: CMakeFiles/code.dir/cpp/main.cpp.o
 code: CMakeFiles/code.dir/cpp/Node.cpp.o
 code: CMakeFiles/code.dir/cpp/AVLTree.cpp.o
 code: CMakeFiles/code.dir/cpp/Console.cpp.o
-code: CMakeFiles/code.dir/cpp/BitMap.cpp.o
+code: CMakeFiles/code.dir/cpp/User.cpp.o
+code: CMakeFiles/code.dir/cpp/Book.cpp.o
 code: CMakeFiles/code.dir/build.make
 code: CMakeFiles/code.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/Debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable code"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final work/finalWorkResult/code/Debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable code"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/code.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

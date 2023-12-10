@@ -5,38 +5,31 @@
 #ifndef CODE_CONST_H
 #define CODE_CONST_H
 #include <string>
+#define goto(x, y) printf("\033[%d;%dH", (y+2), (x+2))
 
-
-const int PERMISSION_NUM = 6;
-
-const int INSERT_USER_INDEX = 0;
-const int INSERT_ADMIN_INDEX = 1;
-const int DELETE_USER_INDEX = 2;
-const int DELETE_ADMIN_INDEX = 3;
-const int CHANGE_USER_INDEX = 4;
-const int CHANGE_ADMIN_INDEX = 5;
-
-const std::string USER_PERMISSION_DEFAULT = "100000";
-const std::string ADMIN_PERMISSION_DEFAULT = "111010";
-
-const std::string PERMISSION_STRING[PERMISSION_NUM] = {"新增用户权限","新增管理员权限",
-                                                  "删除其他用户权限","删除其他管理员权限",
-                                                  "修改其他用户权限","修改其他管理员权限"};
-
-const std::string USER_FILE_PATH = "../txt/user.txt";
+const std::string USER_FILE_PATH =
+    "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final "
+    "work/finalWorkResult/code/txt/user.txt";
+const std::string BOOK_FILE_PATH =
+    "/Users/jin/Downloads/uni/code/c++/data_structure/zjut/final "
+    "work/finalWorkResult/code/txt/book.txt";
 
 const int UI_LOGIN = 1;
 const int UI_REGISTER = 2;
 const int UI_CLOSE = 3;
 
-const int ADMIN_UI_CHANGE_PASSWORD = 1;
-const int ADMIN_UI_CHANGE_PERMISSION = 2;
-const int ADMIN_UI_DESTROY_USER = 3;
-const int ADMIN_UI_INSERT_USER = 4;
-const int ADMIN_UI_RETURN = 5;
+const int ADMIN_ADD_BOOK = 1;
+const int ADMIN_DELETE_BOOK = 2;
+const int ADMIN_QUERY_BOOK = 3;
+const int ADMIN_DISPLAY_BOOK = 4;
+const int ADMIN_DISPLAY_USER = 5;
+const int ADMIN_DELETE_USER = 6;
+const int ADMIN_LOGOUT = 7;
 
-const int USER_UI_CHANGE_PASSWORD = 1;
-const int USER_UI_CLOSE = 2;
-const int USER_UI_RETURN = 3;
+const int USER_BORROW_BOOK = 1;
+const int USER_RETURN_BOOK = 2;
+const int USER_QUERY_BOOK = 3;
+const int USER_DELETE_SELF = 4;
+const int USER_LOGOUT = 5;
 
-#endif //CODE_CONST_H
+#endif // CODE_CONST_H

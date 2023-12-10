@@ -153,29 +153,29 @@ cpp/AVLTree.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/AVLTree.cpp.s
 .PHONY : cpp/AVLTree.cpp.s
 
-cpp/BitMap.o: cpp/BitMap.cpp.o
-.PHONY : cpp/BitMap.o
+cpp/Book.o: cpp/Book.cpp.o
+.PHONY : cpp/Book.o
 
 # target to build an object file
-cpp/BitMap.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/BitMap.cpp.o
-.PHONY : cpp/BitMap.cpp.o
+cpp/Book.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/Book.cpp.o
+.PHONY : cpp/Book.cpp.o
 
-cpp/BitMap.i: cpp/BitMap.cpp.i
-.PHONY : cpp/BitMap.i
+cpp/Book.i: cpp/Book.cpp.i
+.PHONY : cpp/Book.i
 
 # target to preprocess a source file
-cpp/BitMap.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/BitMap.cpp.i
-.PHONY : cpp/BitMap.cpp.i
+cpp/Book.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/Book.cpp.i
+.PHONY : cpp/Book.cpp.i
 
-cpp/BitMap.s: cpp/BitMap.cpp.s
-.PHONY : cpp/BitMap.s
+cpp/Book.s: cpp/Book.cpp.s
+.PHONY : cpp/Book.s
 
 # target to generate assembly for a file
-cpp/BitMap.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/BitMap.cpp.s
-.PHONY : cpp/BitMap.cpp.s
+cpp/Book.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/Book.cpp.s
+.PHONY : cpp/Book.cpp.s
 
 cpp/Console.o: cpp/Console.cpp.o
 .PHONY : cpp/Console.o
@@ -225,6 +225,30 @@ cpp/Node.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/Node.cpp.s
 .PHONY : cpp/Node.cpp.s
 
+cpp/User.o: cpp/User.cpp.o
+.PHONY : cpp/User.o
+
+# target to build an object file
+cpp/User.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/User.cpp.o
+.PHONY : cpp/User.cpp.o
+
+cpp/User.i: cpp/User.cpp.i
+.PHONY : cpp/User.i
+
+# target to preprocess a source file
+cpp/User.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/User.cpp.i
+.PHONY : cpp/User.cpp.i
+
+cpp/User.s: cpp/User.cpp.s
+.PHONY : cpp/User.s
+
+# target to generate assembly for a file
+cpp/User.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/cpp/User.cpp.s
+.PHONY : cpp/User.cpp.s
+
 cpp/main.o: cpp/main.cpp.o
 .PHONY : cpp/main.o
 
@@ -261,15 +285,18 @@ help:
 	@echo "... cpp/AVLTree.o"
 	@echo "... cpp/AVLTree.i"
 	@echo "... cpp/AVLTree.s"
-	@echo "... cpp/BitMap.o"
-	@echo "... cpp/BitMap.i"
-	@echo "... cpp/BitMap.s"
+	@echo "... cpp/Book.o"
+	@echo "... cpp/Book.i"
+	@echo "... cpp/Book.s"
 	@echo "... cpp/Console.o"
 	@echo "... cpp/Console.i"
 	@echo "... cpp/Console.s"
 	@echo "... cpp/Node.o"
 	@echo "... cpp/Node.i"
 	@echo "... cpp/Node.s"
+	@echo "... cpp/User.o"
+	@echo "... cpp/User.i"
+	@echo "... cpp/User.s"
 	@echo "... cpp/main.o"
 	@echo "... cpp/main.i"
 	@echo "... cpp/main.s"

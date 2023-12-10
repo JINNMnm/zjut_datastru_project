@@ -1,7 +1,6 @@
 //
 // Created by 31320 on 2023/9/28.
 //
-#include "../h/BitMap.h"
 #include "../h/Console.h"
 #include "../h/Node.h"
 #include "../h/const.h"
@@ -12,7 +11,10 @@ using namespace std;
 
 int main() {
   // init the console
-  Console console(USER_FILE_PATH);
+  Console::CleanWindow();
+  cout << "start" << endl;
+  Console console;
+  console.init();
 
   while (1) {
     console.Run();

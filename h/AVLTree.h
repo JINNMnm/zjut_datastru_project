@@ -5,71 +5,72 @@
 #ifndef CODE_AVLTREE_H
 #define CODE_AVLTREE_H
 #include <string>
-#include "BitMap.h"
 using namespace std;
 
 class Node;
 
-class AVLTree{
+class AVLTree {
 public:
-    // constructor
-    AVLTree();
+  // constructor
+  AVLTree();
 
-    // Insert
-    bool Insert(const string& userName, const string& password,bool isAdminCheck,const Node* node);
-    bool Insert(const string &userName, const string &password, bool isAdminCheck,const Node* thisNode,
-                const string &bitMapOtherString);
+  // destructor
+  ~AVLTree();
+  void destroy(Node *root);
 
-    // Delete
-    Node* Delete(const string& userName,Node* thisNode, Node *targetedNode);
+  // getter and setter
+  Node *getRoot();
+  void setRoot(Node *root);
+  int getDepth();
 
-    // change the permission
-    void ChangePermission(Node* targetNode,const Node* thisNode,const std::string &bitMapOtherString);
+  // insert a node
+  bool add(Node *newNode);
+  // delete a node
+  bool del(string targetID);
 
-    // find the node by userName
-    Node* FindNodeByUserName(const string& userName);
+  // traverse the tree to display
+  // Write to file
+  void writeToFile(ofstream &outFile, Node *root);
 
-    // print the tree
-    void PrintTree(Node* node);
+  // load from file
+  void loadFromFile(ifstream &inFile);
 
-    // read the tree from file
-    void ReadTreeFromFile(const string& fileName);
+  // display the tree
+  bool displayTree();
+  bool diaplay();
 
-    // write the tree to file
-    void WriteTreeToFile(const string& fileName);
+  // when deleye a user, we need to check if the user have returned all the books
+  bool isUserHaveBook(string userID);
 
-    // getter and setter
-    Node* GetRoot() const;
-    int GetHeight(Node* node);
-
-    // destructor
-    void DestroyTree(Node *T);
-    ~AVLTree() = default;
-
-    // Get Node PTr
-    Node*& GetLeftPtr(Node*& node);
-    Node*& GetRightPtr(Node*& node);
-
+  // search for a node
+  Node* search(string targetID);
 private:
-    Node* root; // root of the tree
-    // add a node to the tree
-    bool addNode(Node *&T, Node* node);
-    // Insert while reading from file
-    void InsertFromFile(const string& userName, const string& password, bool isAdminCheck,
-                        const string &bitMapOtherString);
+  Node *root; // root of the tree
+  
+  // insert a node
+  bool add(Node *newNode, Node *&root);
+  // delete a node
+  bool del(string targetID, Node* &root);
+  // search for a node
+  Node* search(string targetID, Node *root);
+  // displayTree
+  bool displayTree(Node* T, int depth, int right, int tap);
+  bool display(Node* T);
+  // check if the user have books
+  bool isUserHaveBook(string userID, Node* root);
+  
 
-    // delete a node from the tree
-    Node* DeleteNode(Node* node);
-    Node* DeleteNode(Node* currentNode, Node* nodeToDelete) ;
+  // rotare the tree
+  Node *LL(Node* root);
+  Node *RR(Node* root);
+  Node *LR(Node* root);
+  Node *RL(Node* root);
 
-    // balance the tree
-    Node* LL(Node* node);
-    Node* RR(Node* node);
-    Node* LR(Node* node);
-    Node* RL(Node* node);
-
-    // print the tree into a file
-    void printTreeToFile(Node* node, ofstream& file);
+  // tell if tree need LL? RR? LR? RL?
+  bool needLL(Node *root);
+  bool needRR(Node *root);
+  bool needLR(Node *root);
+  bool needRL(Node *root);
 };
 
-#endif //CODE_AVLTREE_H
+#endif // CODE_AVLTREE_H
